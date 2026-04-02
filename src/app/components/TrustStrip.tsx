@@ -16,7 +16,7 @@ export function TrustStrip() {
           key={label}
           className="glass-soft px-4 py-2.5 rounded-full border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)] transition-all"
         >
-          {item}
+          {label}
         </div>
       ))}
     </div>

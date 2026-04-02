@@ -1,3 +1,14 @@
+interface ProblemStat {
+  value: string;
+  label: string;
+}
+
+const problemStats: ProblemStat[] = [
+  { value: "2.1 hours", label: "Spent on email daily" },
+  { value: "41%", label: "Of work time lost" },
+  { value: "$1.2T", label: "Annual productivity cost" }
+];
+
 export function ProblemSection() {
   return (
     <section className="py-[72px] relative overflow-hidden">
@@ -32,25 +43,4 @@ export function ProblemSection() {
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span className="text-red-400">✖</span>
-                <span>Summarizers miss actions and deadlines</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-400">✖</span>
-                <span>Priority filters don't understand context</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-400">✖</span>
-                <span>No integration with calendars/tasks</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-red-400">✖</span>
-                <span>Team workflows are completely ignored</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+                <span className="text-red
