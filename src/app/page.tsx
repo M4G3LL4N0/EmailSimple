@@ -1,9 +1,21 @@
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
-import { ProblemSection } from '@/app/components/ProblemSection';
-import { DifferentiationSection } from '@/app/components/DifferentiationSection';
-import { HowItWorks } from '@/app/components/HowItWorks';
-import { MarketOpportunity } from '@/app/components/MarketOpportunity';
-import { PricingSection } from '@/app/components/PricingSection';
+import { FeatureSection } from '@/components/FeatureSection';
+import { HowItWorks } from '@/components/HowItWorks';
+import { PricingSection } from '@/components/PricingSection';
 import { WaitlistSection } from '@/components/WaitlistSection';
-import { Footer } from '@/components/F
+import { Footer } from '@/components/Footer';
+
+export default function Page() {
+  return (
+    <main>
+      <Header />
+      <Hero />
+      <FeatureSection />
+      <HowItWorks />
+      <PricingSection />
+      <WaitlistSection />
+      <Footer />
+    </main>
+  );
+}
