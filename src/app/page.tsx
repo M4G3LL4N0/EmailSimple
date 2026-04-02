@@ -1,4 +1,9 @@
-const problemStats = [
+interface StatItem {
+  value: string;
+  label: string;
+}
+
+const problemStats: StatItem[] = [
   { value: "3.1h", label: "Average time spent daily on email" },
   { value: "42%", label: "Of important emails get buried" },
   { value: "5.7x", label: "More likely to miss deadlines in busy inboxes" },

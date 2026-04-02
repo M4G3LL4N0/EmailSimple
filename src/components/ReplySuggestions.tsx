@@ -1,3 +1,5 @@
+'use client';
+
 export function ReplySuggestions() {
   return (
     <section className="glass rounded-[28px] p-6">

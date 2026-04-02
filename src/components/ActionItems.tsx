@@ -6,12 +6,19 @@ export function ActionItems() {
       </h2>
       
       <div className="grid gap-3.5">
-        {[
-          {
-            title: "Approve vendor contract",
-            meta: "Due today • Legal Team",
-            status: "Pending your approval"
-          },
+interface ActionItem {
+  title: string;
+  meta: string;
+  status: string;
+}
+
+export function ActionItems() {
+  const items: ActionItem[] = [
+    {
+      title: "Approve vendor contract",
+      meta: "Due today • Legal Team",
+      status: "Pending your approval"
+    },
           {
             title: "Review marketing budget",
             meta: "Due tomorrow • Finance Team",

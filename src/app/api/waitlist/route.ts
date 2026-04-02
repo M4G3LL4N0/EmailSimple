@@ -2,7 +2,13 @@ import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const { name, email } = await request.json();
+interface WaitlistRequest {
+  name: string;
+  email: string;
+}
+
+export async function POST(request: Request) {
+  const { name, email }: WaitlistRequest = await request.json();
 
   // Basic validation
   if (!name || !email) {

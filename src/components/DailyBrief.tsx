@@ -14,12 +14,19 @@ export function DailyBrief() {
       </div>
 
       <div className="grid gap-3.5">
-        {[
-          {
-            title: "Client contract needs approval",
-            meta: "Due today • High priority",
-            body: "The sender is waiting on your confirmation before moving forward.",
-          },
+interface BriefItem {
+  title: string;
+  meta: string;
+  body: string;
+}
+
+export function DailyBrief() {
+  const items: BriefItem[] = [
+    {
+      title: "Client contract needs approval",
+      meta: "Due today • High priority",
+      body: "The sender is waiting on your confirmation before moving forward.",
+    },
           {
             title: "Schedule request for Thursday",
             meta: "Calendar suggestion • Medium priority",
