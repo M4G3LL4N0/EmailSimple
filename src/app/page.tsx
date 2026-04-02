@@ -1,34 +1,32 @@
-const features = [
+const problemStats = [
+  { value: "3.1h", label: "Average time spent daily on email" },
+  { value: "42%", label: "Of important emails get buried" },
+  { value: "5.7x", label: "More likely to miss deadlines in busy inboxes" },
+];
+
+const differentiators = [
   {
-    title: "Daily Brief",
-    copy:
-      "See the few emails that actually matter today, instead of digging through a noisy inbox.",
+    title: "Action Extraction",
+    copy: "We find what needs doing, not just summarizing",
+    icon: "💡"
   },
   {
     title: "Deadline Detection",
-    copy:
-      "Catch dates, due times, hidden asks, approvals, and commitments buried inside long threads.",
+    copy: "AI that understands commitments, not just dates",
+    icon: "⏰"
   },
   {
-    title: "Action Extraction",
-    copy:
-      "Turn messy conversations into a clean list of next steps, reply needs, and follow-ups.",
+    title: "Workflow Integration",
+    copy: "Turns email into calendar events and tasks automatically",
+    icon: "🔄"
   },
-  {
-    title: "Calendar Ready",
-    copy:
-      "Convert important email moments into events, reminders, and organized scheduling suggestions.",
-  },
-  {
-    title: "Priority Intelligence",
-    copy:
-      "Understand what is urgent, what is strategic, what can wait, and what should never be missed.",
-  },
-  {
-    title: "Fast Clarity",
-    copy:
-      "Read one screen and know what matters, what needs action, and what you can safely ignore.",
-  },
+];
+
+const marketOpportunities = [
+  "Knowledge workers drowning in email",
+  "Teams losing track of shared commitments",
+  "Executives needing faster signal from noise",
+  "Remote teams needing better email coordination"
 ];
 
 const steps = [
@@ -54,40 +52,43 @@ const steps = [
 
 const pricing = [
   {
-    tier: "Starter",
-    price: "Free",
-    description: "For trying the daily brief and simplified inbox summaries.",
+    tier: "Professional",
+    price: "$29/mo",
+    description: "For individuals who need to move faster with less email stress.",
     bullets: [
-      "One inbox connection",
-      "Basic daily brief",
-      "Important thread summaries",
-      "Simple action extraction",
-    ],
-  },
-  {
-    tier: "Pro",
-    price: "$19/mo",
-    description: "For professionals who want deadlines, follow-ups, and deeper organization.",
-    bullets: [
-      "Everything in Starter",
-      "Deadline detection",
-      "Calendar suggestions",
-      "Priority scoring",
+      "Priority inbox intelligence",
+      "Deadline & action extraction",
+      "Calendar integration",
       "Follow-up reminders",
+      "100 AI suggestions/month"
     ],
     featured: true,
   },
   {
     tier: "Team",
-    price: "$49/user",
-    description: "For companies that need shared visibility, faster response, and better coordination.",
+    price: "$59/user",
+    description: "For groups that need shared visibility and coordination.",
     bullets: [
-      "Everything in Pro",
-      "Shared workflows",
-      "Admin controls",
-      "Team-level summaries",
+      "Everything in Professional",
+      "Shared action tracking",
+      "Team priority scoring",
       "Collaboration insights",
+      "500 AI suggestions/user"
     ],
+  },
+  {
+    tier: "Enterprise",
+    price: "Custom",
+    description: "For organizations needing security, compliance and customization.",
+    bullets: [
+      "Everything in Team",
+      "SAML/SSO",
+      "Dedicated instance",
+      "Custom workflows",
+      "Unlimited AI suggestions",
+      "Priority support"
+    ],
+    cta: "Contact sales"
   },
 ];
 
@@ -104,8 +105,10 @@ export default function Page() {
     <main>
       <Header />
       <Hero />
-      <FeatureSection />
+      <ProblemSection />
+      <DifferentiationSection />
       <HowItWorks />
+      <MarketOpportunity />
       <PricingSection />
       <WaitlistSection />
       <Footer />
