@@ -31,7 +31,7 @@ export function Hero() {
               <Link href="#waitlist" className="primary-btn">
                 Join the waitlist
               </Link>
-              <Link href="#dashboard" className="secondary-btn">
+              <Link href="/dashboard" className="secondary-btn">
                 See the product
               </Link>
             </div>
