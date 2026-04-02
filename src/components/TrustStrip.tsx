@@ -1,14 +1,13 @@
 import React from 'react';
 
-export function WaitlistSection() {
+export function TrustStrip() {
   return (
     <section className="py-16">
       <div className="container">
         <div className="text-center max-w-2xl mx-auto">
           <div className="eyebrow mx-auto">
             <span className="eyebrow-dot" />
-            Why EmailSimple Wins
-          </div>
+            Why EmailSimple Wins          </div>
           <h2 className="section-title mt-5">
             Beyond summarization - real workflow automation
           </h2>
