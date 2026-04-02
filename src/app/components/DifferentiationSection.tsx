@@ -1,3 +1,31 @@
+import React from 'react';
+
+// Define a type for the differentiator items
+interface Differentiator {
+  title: string;
+  icon: string;
+  description: string;
+}
+
+// Define the differentiator items array
+const differentiators: Differentiator[] = [
+  {
+    title: "Automated Action Tracking",
+    icon: "📋",
+    description: "Automatically extract action items from emails and track them in your project management tools"
+  },
+  {
+    title: "Priority Scoring",
+    icon: "⭐️",
+    description: "Assign priority scores to emails based on team impact and urgency"
+  },
+  {
+    title: "Shared Inbox Management",
+    icon: "👥",
+    description: "Manage shared inboxes with delegated ownership and accountability tracking"
+  }
+];
+
 export function DifferentiationSection() {
   return (
     <section className="py-[80px] bg-gradient-to-b from-[rgba(7,17,31,0.5)] to-[rgba(7,17,31,0.9)]">
@@ -20,13 +48,13 @@ export function DifferentiationSection() {
             <div key={item.title} className="glass rounded-[28px] p-6 text-center">
               <div className="text-[32px] mb-4">{item.icon}</div>
               <h3 className="text-[20px] font-bold">{item.title}</h3>
-              <p className="text-muted mt-2">{item.copy}</p>
+              <p className="text-muted mt-2">{item.description}</p>
             </div>
           ))}
         </div>
 
         <div className="glass rounded-[28px] p-6 mt-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-8 items-center">
             <div>
               <h3 className="text-[22px] font-bold">
                 Built for how teams actually work
