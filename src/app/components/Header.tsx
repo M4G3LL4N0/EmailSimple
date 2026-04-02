@@ -16,12 +16,20 @@ export function Header() {
           <Link href="#waitlist" className="hover:text-white transition-colors">Waitlist</Link>
         </nav>
 
-        <Link 
-          href="#waitlist" 
-          className="secondary-btn h-11 hover:bg-white/10 transition-colors"
-        >
-          Join waitlist
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link 
+            href="/dashboard" 
+            className="secondary-btn h-11 hover:bg-white/10 transition-colors"
+          >
+            Product Demo
+          </Link>
+          <Link 
+            href="#waitlist" 
+            className="primary-btn h-11 hover:bg-blue-500/90 transition-colors"
+          >
+            Join Waitlist
+          </Link>
+        </div>
       </div>
     </header>
   );

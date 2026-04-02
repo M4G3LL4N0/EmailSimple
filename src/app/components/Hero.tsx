@@ -34,13 +34,13 @@ export function Hero() {
                 href="#waitlist" 
                 className="primary-btn hover:bg-blue-500/90 transition-colors"
               >
-                Join the waitlist
+                Join the Waitlist
               </Link>
               <Link 
                 href="/dashboard" 
                 className="secondary-btn hover:bg-white/10 transition-colors"
               >
-                See the product
+                See the Product
               </Link>
             </div>
 
