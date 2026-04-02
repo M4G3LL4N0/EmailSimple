@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { TrustStrip } from './TrustStrip';
 
 export function Hero() {
