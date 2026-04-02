@@ -1,16 +1,14 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
 interface WaitlistRequest {
   name: string;
   email: string;
 }
 
 export async function POST(request: Request) {
-  const { name, email }: WaitlistRequest = await request.json();
+  const { name, email } = (await request.json()) as WaitlistRequest;
 
-  // Basic validation
   if (!name || !email) {
     return NextResponse.json(
       { error: 'Name and email are required' },
@@ -24,7 +22,7 @@ export async function POST(request: Request) {
       name,
       email,
       source: 'landing_page',
-      status: 'pending'
+      status: 'pending',
     });
 
   if (error) {

@@ -1,4 +1,35 @@
-export function DailyBrief() {
+import { FC } from 'react';
+
+interface BriefItem {
+  title: string;
+  meta: string;
+  body: string;
+}
+
+export const DailyBrief: FC = () => {
+  const items: BriefItem[] = [
+    {
+      title: "Client contract needs approval",
+      meta: "Due today • High priority",
+      body: "The sender is waiting on your confirmation before moving forward.",
+    },
+    {
+      title: "Schedule request for Thursday",
+      meta: "Calendar suggestion • Medium priority",
+      body: "An email thread includes a clear proposed time and should be reviewed.",
+    },
+    {
+      title: "Invoice follow-up missing response",
+      meta: "2 days old • Needs reply",
+      body: "A payment-related conversation may stall if you do not respond soon.",
+    },
+    {
+      title: "Recruiter reached back out",
+      meta: "Important sender • Opportunity",
+      body: "A career-related thread resurfaced and likely deserves quick attention.",
+    },
+  ];
+
   return (
     <section className="glass rounded-[32px] p-7 border border-[rgba(255,255,255,0.1)]">
       <div className="flex items-center justify-between mb-5">
@@ -14,35 +45,7 @@ export function DailyBrief() {
       </div>
 
       <div className="grid gap-3.5">
-interface BriefItem {
-  title: string;
-  meta: string;
-  body: string;
-}
-
-export function DailyBrief() {
-  const items: BriefItem[] = [
-    {
-      title: "Client contract needs approval",
-      meta: "Due today • High priority",
-      body: "The sender is waiting on your confirmation before moving forward.",
-    },
-          {
-            title: "Schedule request for Thursday",
-            meta: "Calendar suggestion • Medium priority",
-            body: "An email thread includes a clear proposed time and should be reviewed.",
-          },
-          {
-            title: "Invoice follow-up missing response",
-            meta: "2 days old • Needs reply",
-            body: "A payment-related conversation may stall if you do not respond soon.",
-          },
-          {
-            title: "Recruiter reached back out",
-            meta: "Important sender • Opportunity",
-            body: "A career-related thread resurfaced and likely deserves quick attention.",
-          },
-        ].map((item) => (
+        {items.map((item) => (
           <div
             key={item.title}
             className="glass-soft rounded-[22px] p-4.5"
@@ -66,4 +69,4 @@ export function DailyBrief() {
       </div>
     </section>
   );
-}
+};

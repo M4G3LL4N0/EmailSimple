@@ -1,35 +1,38 @@
-export function ActionItems() {
-  return (
-    <section className="glass rounded-[28px] p-6">
-      <h2 className="text-[22px] font-bold tracking-tight mb-5">
-        Action Items
-      </h2>
-      
-      <div className="grid gap-3.5">
+import { FC } from 'react';
+
 interface ActionItem {
   title: string;
   meta: string;
   status: string;
 }
 
-export function ActionItems() {
+export const ActionItems: FC = () => {
   const items: ActionItem[] = [
     {
       title: "Approve vendor contract",
       meta: "Due today • Legal Team",
-      status: "Pending your approval"
+      status: "Pending your approval",
     },
-          {
-            title: "Review marketing budget",
-            meta: "Due tomorrow • Finance Team",
-            status: "Needs your feedback"
-          },
-          {
-            title: "Schedule team meeting",
-            meta: "Follow-up • Next week",
-            status: "Needs time slot"
-          }
-        ].map((item) => (
+    {
+      title: "Review marketing budget",
+      meta: "Due tomorrow • Finance Team",
+      status: "Needs your feedback",
+    },
+    {
+      title: "Schedule team meeting",
+      meta: "Follow-up • Next week",
+      status: "Needs time slot",
+    },
+  ];
+
+  return (
+    <section className="glass rounded-[28px] p-6">
+      <h2 className="text-[22px] font-bold tracking-tight mb-5">
+        Action Items
+      </h2>
+
+      <div className="grid gap-3.5">
+        {items.map((item) => (
           <div
             key={item.title}
             className="glass-soft rounded-[22px] p-4.5"
@@ -53,4 +56,4 @@ export function ActionItems() {
       </div>
     </section>
   );
-}
+};
