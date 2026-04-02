@@ -2,17 +2,18 @@ import { TrustStrip } from './TrustStrip';
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-[84px] pb-[54px]">
-      <div className="hero-grid" />
-      <div className="container">
-        <div className="grid grid-cols-[1.15fr_0.85fr] gap-7 items-center">
+    <section id="top" className="relative overflow-hidden pt-[92px] pb-[72px]">
+      <div className="absolute inset-0 hero-grid" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,17,31,0.6)] to-[rgba(7,17,31,0.9)]" />
+      <div className="container relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 items-center">
           <div>
-            <div className="eyebrow">
+            <div className="eyebrow mb-6">
               <span className="eyebrow-dot" />
               Inbox clarity, without inbox chaos
             </div>
 
-            <h1 className="mt-5 mb-5 text-[clamp(3.2rem,7vw,6.2rem)] leading-[0.95] tracking-tight max-w-[840px]">
+            <h1 className="mb-6 text-[clamp(3.2rem,7vw,6.2rem)] leading-[0.95] tracking-tight max-w-[840px] font-medium">
               Your inbox,
               <br />
               simplified into
@@ -50,7 +51,7 @@ export function Hero() {
 
 function DashboardPreview() {
   return (
-    <div id="dashboard" className="glass mock-card">
+    <div id="dashboard" className="glass mock-card border border-[rgba(255,255,255,0.1)] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)]">
       <div className="flex items-center justify-between mb-5">
         <div>
           <div className="text-muted text-[13px]">Today's briefing</div>
@@ -113,7 +114,7 @@ function DashboardPreview() {
 
 function ValueMetrics() {
   return (
-    <div className="grid grid-cols-3 gap-4 mt-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
       {[
         {
           value: "1 screen",
@@ -130,7 +131,7 @@ function ValueMetrics() {
       ].map((item) => (
         <div
           key={item.value}
-          className="glass-soft rounded-[24px] p-6"
+          className="glass-soft rounded-[26px] p-7 border border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)] transition-all"
         >
           <p className="metric-value">{item.value}</p>
           <div className="metric-label">{item.label}</div>

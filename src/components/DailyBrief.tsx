@@ -1,6 +1,6 @@
 export function DailyBrief() {
   return (
-    <section className="glass rounded-[28px] p-6">
+    <section className="glass rounded-[32px] p-7 border border-[rgba(255,255,255,0.1)]">
       <div className="flex items-center justify-between mb-5">
         <div>
           <div className="text-muted text-[13px]">Today's briefing</div>

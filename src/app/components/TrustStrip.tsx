@@ -1,6 +1,6 @@
 export function TrustStrip() {
   return (
-    <div className="mt-8 flex flex-wrap gap-3 text-muted text-[14px]">
+    <div className="mt-10 flex flex-wrap gap-3 text-[15px]">
       {[
         "Daily brief",
         "Deadline detection", 
@@ -9,7 +9,7 @@ export function TrustStrip() {
       ].map((item) => (
         <div
           key={item}
-          className="glass-soft px-3.5 py-2.5 rounded-full"
+          className="glass-soft px-4 py-2.5 rounded-full border border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)] transition-all"
         >
           {item}
         </div>

@@ -1,6 +1,6 @@
 export function DifferentiationSection() {
   return (
-    <section className="py-[42px] bg-gradient-to-b from-[rgba(7,17,31,0.4)] to-[rgba(7,17,31,0.8)]">
+    <section className="py-[80px] bg-gradient-to-b from-[rgba(7,17,31,0.5)] to-[rgba(7,17,31,0.9)]">
       <div className="container">
         <div className="text-center max-w-2xl mx-auto">
           <div className="eyebrow mx-auto">
