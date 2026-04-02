@@ -30,10 +30,16 @@ export function Hero() {
             </p>
 
             <div className="flex gap-3.5 mt-7 flex-wrap">
-              <Link href="#waitlist" className="primary-btn">
+              <Link 
+                href="#waitlist" 
+                className="primary-btn hover:bg-blue-500/90 transition-colors"
+              >
                 Join the waitlist
               </Link>
-              <Link href="/dashboard" className="secondary-btn">
+              <Link 
+                href="/dashboard" 
+                className="secondary-btn hover:bg-white/10 transition-colors"
+              >
                 See the product
               </Link>
             </div>

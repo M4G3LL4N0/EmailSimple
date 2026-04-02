@@ -40,7 +40,7 @@ export function WaitlistSection() {
 
   if (status === 'success') {
     return (
-      <section id="waitlist" className="py-[42px]">
+      <section id="waitlist" className="py-[80px]">
         <div className="container">
           <div className="glass rounded-[34px] p-[34px] text-center">
             <div className="eyebrow mx-auto">
@@ -58,7 +58,7 @@ export function WaitlistSection() {
               href="https://twitter.com/emailsimple"
               target="_blank"
               rel="noopener noreferrer"
-              className="primary-btn inline-flex mt-6"
+              className="primary-btn inline-flex mt-6 hover:bg-blue-500/90 transition-colors"
             >
               Follow on Twitter
             </Link>
@@ -69,7 +69,7 @@ export function WaitlistSection() {
   }
 
   return (
-    <section id="waitlist" className="py-[42px]">
+    <section id="waitlist" className="py-[80px]">
       <div className="container">
         <div className="glass rounded-[34px] p-[34px] relative overflow-hidden">
           <div className="absolute top-[-80px] right-[-60px] w-[260px] h-[260px] rounded-full bg-[radial-gradient(circle,rgba(103,183,255,0.22),transparent_70%)] pointer-events-none" />
@@ -97,7 +97,7 @@ export function WaitlistSection() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="h-[54px] rounded-[18px] border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] text-white px-4 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="h-[54px] rounded-[18px] border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] text-white px-4 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:bg-white/10 transition-colors"
               />
               <input
                 type="email"
@@ -105,12 +105,12 @@ export function WaitlistSection() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-[54px] rounded-[18px] border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] text-white px-4 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="h-[54px] rounded-[18px] border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] text-white px-4 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:bg-white/10 transition-colors"
               />
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="primary-btn w-full h-[52px] flex items-center justify-center"
+                className="primary-btn w-full h-[52px] flex items-center justify-center hover:bg-blue-500/90 transition-colors"
               >
                 {status === 'loading' ? (
                   <span className="inline-block h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

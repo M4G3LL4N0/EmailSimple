@@ -16,24 +16,36 @@ export async function POST(request: Request) {
     );
   }
 
-  const { error } = await supabase
-    .from('waitlist_signups')
-    .insert({
-      name,
-      email,
-      source: 'landing_page',
-      status: 'pending',
-    });
+  // If Supabase isn't configured, still return success
+  if (!supabase) {
+    return NextResponse.json(
+      { success: true },
+      { status: 200 }
+    );
+  }
 
-  if (error) {
+  try {
+    const { error } = await supabase
+      .from('waitlist_signups')
+      .insert({
+        name,
+        email,
+        source: 'landing_page',
+        status: 'pending',
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    return NextResponse.json(
+      { success: true },
+      { status: 200 }
+    );
+  } catch (error) {
     return NextResponse.json(
       { error: 'Failed to submit. Please try again.' },
       { status: 500 }
     );
   }
-
-  return NextResponse.json(
-    { success: true },
-    { status: 200 }
-  );
 }
