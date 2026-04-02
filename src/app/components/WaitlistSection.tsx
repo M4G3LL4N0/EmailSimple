@@ -1,0 +1,135 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+
+export function WaitlistSection() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    setError('');
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit');
+      }
+
+      setStatus('success');
+      setName('');
+      setEmail('');
+    } catch (err) {
+      setStatus('error');
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <section id="waitlist" className="py-[42px]">
+        <div className="container">
+          <div className="glass rounded-[34px] p-[34px] text-center">
+            <div className="eyebrow mx-auto">
+              <span className="eyebrow-dot" />
+              You're on the list
+            </div>
+            <h2 className="section-title mt-5">
+              Thanks for joining the waitlist!
+            </h2>
+            <p className="section-copy max-w-[500px] mx-auto mt-4">
+              We'll be in touch soon with early access details. In the meantime,
+              follow us on Twitter for updates.
+            </p>
+            <Link
+              href="https://twitter.com/emailsimple"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="primary-btn inline-flex mt-6"
+            >
+              Follow on Twitter
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="waitlist" className="py-[42px]">
+      <div className="container">
+        <div className="glass rounded-[34px] p-[34px] relative overflow-hidden">
+          <div className="absolute top-[-80px] right-[-60px] w-[260px] h-[260px] rounded-full bg-[radial-gradient(circle,rgba(103,183,255,0.22),transparent_70%)] pointer-events-none" />
+
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_0.9fr] gap-5 items-center">
+            <div>
+              <div className="eyebrow">
+                <span className="eyebrow-dot" />
+                Early access
+              </div>
+              <h2 className="section-title mt-5">
+                Get priority access to EmailSimple
+              </h2>
+              <p className="section-copy mt-4 max-w-[620px]">
+                Join our exclusive waitlist to be among the first to experience
+                inbox clarity. We'll notify you when early access begins and
+                share special preview content.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="grid gap-3.5">
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="h-[54px] rounded-[18px] border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] text-white px-4 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-[54px] rounded-[18px] border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] text-white px-4 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="primary-btn w-full h-[52px] flex items-center justify-center"
+              >
+                {status === 'loading' ? (
+                  <span className="inline-block h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  'Join the waitlist'
+                )}
+              </button>
+              {error && (
+                <p className="text-red-400 text-sm mt-2">
+                  {error}
+                </p>
+              )}
+              <p className="text-muted-2 text-[13px] leading-[1.6] mt-2">
+                We respect your privacy. Unsubscribe at any time.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
