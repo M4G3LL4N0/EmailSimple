@@ -28,7 +28,11 @@ const differentiators: Differentiator[] = [
 
 export function DifferentiationSection() {
   return (
-    <section className="py-[80px] bg-gradient-to-b from-[rgba(7,17,31,0.5)] to-[rgba(7,17,31,0.9)]">
+    <section className="py-[100px] relative overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,11,23,0.3)] to-[rgba(7,11,23,0.9)]" />
+        <div className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,_var(--glow),_transparent_70%)] opacity-20 blur-[100px] pointer-events-none" />
+      </div>
       <div className="container">
         <div className="text-center max-w-2xl mx-auto">
           <div className="eyebrow mx-auto">

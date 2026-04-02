@@ -3,11 +3,13 @@ import { TrustStrip } from './TrustStrip';
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-[120px] pb-[100px]">
+    <section id="top" className="relative overflow-hidden pt-[140px] pb-[120px]">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 hero-grid opacity-[0.12]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,11,23,0.6)] to-[rgba(7,11,23,0.9)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--glow),_transparent_70%)] opacity-[0.15]" />
+        <div className="absolute inset-0 hero-grid opacity-[0.08]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,11,23,0.7)] to-[rgba(7,11,23,0.95)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--glow),_transparent_80%)] opacity-[0.2]" />
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,_var(--glow),_transparent_70%)] opacity-30 blur-[80px] pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,_var(--glow-gold),_transparent_70%)] opacity-20 blur-[100px] pointer-events-none" />
       </div>
       
       <div className="container relative z-10">

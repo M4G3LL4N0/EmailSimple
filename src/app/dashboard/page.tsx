@@ -10,7 +10,7 @@ import { ReplySuggestions } from '@/components/ReplySuggestions';
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#081220] to-[#091423]">
+    <div className="min-h-screen bg-gradient-to-b from-[#070b17] to-[#0a0f1f]">
       <DashboardHeader />
       
       <div className="container flex gap-8 pt-8">

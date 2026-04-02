@@ -1,6 +1,7 @@
 export function ProblemSection() {
   return (
-    <section className="relative overflow-hidden py-[72px]">
+    <section className="relative overflow-hidden py-[100px]">
+      <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,11,23,0.3)] to-[rgba(7,11,23,0.8)]" />
       <div className="container">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
           
