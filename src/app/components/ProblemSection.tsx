@@ -1,46 +1,59 @@
-interface ProblemStat {
-  value: string;
-  label: string;
-}
-
-const problemStats: ProblemStat[] = [
-  { value: "2.1 hours", label: "Spent on email daily" },
-  { value: "41%", label: "Of work time lost" },
-  { value: "$1.2T", label: "Annual productivity cost" }
-];
-
 export function ProblemSection() {
   return (
-    <section className="py-[72px] relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,17,31,0.9)] to-[rgba(7,17,31,0.5)]" />
-      <div className="container relative">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <section className="relative overflow-hidden py-[72px]">
+      <div className="container">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
+          
           <div>
-            <div className="eyebrow">
-              <span className="eyebrow-dot" />
-              The $1T Email Problem
-            </div>
-            <h2 className="section-title mt-5">
-              Email overload is the silent killer of productivity
+            <p className="eyebrow">The problem</p>
+            <h2 className="section-title mt-4">
+              Too many emails look important until the wrong one gets missed.
             </h2>
-            <p className="section-copy mt-4">
-              Despite decades of "inbox zero" hacks, professionals still waste hours daily scanning emails instead of doing meaningful work. The tools haven't evolved to match how we actually use email today.
+            <p className="section-copy mt-6">
+              Deadlines, approvals, follow-ups, and scheduling signals are buried
+              inside threads. Everything feels urgent — until something important
+              slips through.
             </p>
 
-            <div className="grid grid-cols-3 gap-4 mt-8">
-              {problemStats.map((stat) => (
-                <div key={stat.value} className="glass-soft rounded-[24px] p-5">
-                  <p className="metric-value text-blue-2">{stat.value}</p>
-                  <div className="metric-label">{stat.label}</div>
-                </div>
-              ))}
+            <ul className="space-y-4 mt-6">
+              <li className="flex items-start gap-3">
+                <span className="text-red-400">●</span>
+                Hidden deadlines get missed
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-400">●</span>
+                Important threads get buried
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-400">●</span>
+                Follow-ups fall through
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-400">●</span>
+                Everything feels equally urgent
+              </li>
+            </ul>
+          </div>
+
+          <div className="glass-soft rounded-[28px] p-6">
+            <div className="space-y-4">
+              <div className="glass-soft rounded-[20px] p-4">
+                “Can you send this by Thursday?”
+              </div>
+              <div className="glass-soft rounded-[20px] p-4">
+                “Following up on this…”
+              </div>
+              <div className="glass-soft rounded-[20px] p-4">
+                “Let’s meet Tuesday at 2?”
+              </div>
+              <div className="glass-soft rounded-[20px] p-4">
+                “Just checking in…”
+              </div>
             </div>
           </div>
 
-          <div className="glass rounded-[28px] p-6">
-            <h3 className="text-[20px] font-bold mb-4">
-              Why existing solutions fail:
-            </h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <span className="text-red
+        </div>
+      </div>
+    </section>
+  );
+}
