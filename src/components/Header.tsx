@@ -1,0 +1,3 @@
+export function Header() {
+  return <header style={{ padding: 20 }}>EmailSimple</header>;
+}
