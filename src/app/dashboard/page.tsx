@@ -1,43 +1,37 @@
-import { DashboardHeader } from '@/components/DashboardHeader';
-import { DashboardSidebar } from '@/components/DashboardSidebar';
-import { DailyBrief } from '@/components/DailyBrief';
-import { ImportantThreads } from '@/components/ImportantThreads';
-import { ActionItems } from '@/components/ActionItems';
-import { CalendarSuggestions } from '@/components/CalendarSuggestions';
-import { PriorityVisualization } from '@/components/PriorityVisualization';
-import { FollowUpRisk } from '@/components/FollowUpRisk';
-import { ReplySuggestions } from '@/components/ReplySuggestions';
+import { DailyBrief } from "@/components/DailyBrief";
+import { PriorityView } from "@/components/dashboard/PriorityView";
+import { DeadlineTimeline } from "@/components/dashboard/DeadlineTimeline";
+import { ActionCenter } from "@/components/dashboard/ActionCenter";
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#070b17] to-[#0a0f1f]">
-      <DashboardHeader />
-      
-      <div className="container flex gap-8 pt-8">
-        <DashboardSidebar />
-        
-        <main className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-8 pb-20">
-          {/* Left Column */}
-          <div className="space-y-8">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_28%),linear-gradient(180deg,#061018_0%,#05070b_45%,#030405_100%)] text-white">
+      <div className="container py-10">
+        <div className="mb-8">
+          <p className="text-xs uppercase tracking-[0.18em] text-white/45">
+            EmailSimple Dashboard
+          </p>
+          <h1 className="mt-2 text-4xl font-semibold tracking-[-0.05em] text-white">
+            Inbox intelligence
+          </h1>
+          <p className="mt-3 max-w-2xl text-white/65">
+            A clean command layer for priorities, deadlines, and actions.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="md:col-span-2">
             <DailyBrief />
-            
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="col-span-2">
-                <PriorityView />
-              </div>
-              <DeadlineTimeline />
-              <ActionCenter />
-            </section>
           </div>
-          
-          {/* Right Column */}
-          <div className="space-y-8">
-            <FollowUpRadar />
-            <AIReplyAssist />
-            <CalendarSuggestions />
+
+          <div className="md:col-span-2">
+            <PriorityView />
           </div>
-        </main>
+
+          <DeadlineTimeline />
+          <ActionCenter />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
