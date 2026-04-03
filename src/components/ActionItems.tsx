@@ -1,29 +1,20 @@
 import { FC } from 'react';
-
-interface ActionItem {
-  title: string;
-  meta: string;
-  status: string;
-}
+import { ExtractedAction } from '@/lib/types/email';
+import { extractActions } from '@/lib/extraction/actions';
+import { MOCK_EMAILS } from '@/lib/mock-emails';
 
 export const ActionItems: FC = () => {
-  const items: ActionItem[] = [
-    {
-      title: "Approve vendor contract",
-      meta: "Due today • Legal Team",
-      status: "Pending your approval",
-    },
-    {
-      title: "Review marketing budget",
-      meta: "Due tomorrow • Finance Team",
-      status: "Needs your feedback",
-    },
-    {
-      title: "Schedule team meeting",
-      meta: "Follow-up • Next week",
-      status: "Needs time slot",
-    },
-  ];
+  // Process emails to extract actions
+  const actions: ExtractedAction[] = MOCK_EMAILS.flatMap(email => 
+    extractActions(email)
+  ).sort((a, b) => b.priority - a.priority);
+
+  const getPriorityLabel = (priority: number) => {
+    if (priority > 0.8) return 'Critical';
+    if (priority > 0.6) return 'High';
+    if (priority > 0.4) return 'Medium';
+    return 'Low';
+  };
 
   return (
     <section className="glass rounded-[28px] p-6">
@@ -39,17 +30,21 @@ export const ActionItems: FC = () => {
           >
             <div className="flex items-center justify-between gap-4">
               <h3 className="m-0 text-[17px] leading-[1.2] tracking-tight">
-                {item.title}
+                {item.text}
               </h3>
-              <span className="text-gold text-[12px] uppercase tracking-wider">
-                Action needed
+              <span className={`text-[12px] uppercase tracking-wider ${
+                item.priority > 0.8 ? 'text-red-400' : 
+                item.priority > 0.6 ? 'text-gold' : 'text-blue-2'
+              }`}>
+                {getPriorityLabel(item.priority)}
               </span>
             </div>
             <div className="mt-2 text-blue-2 text-[13px]">
-              {item.meta}
+              {item.owner ? `Assigned to ${item.owner} • ` : ''}
+              {item.status}
             </div>
             <p className="mt-2.5 text-muted text-[14px] leading-[1.7]">
-              {item.status}
+              From: {MOCK_EMAILS.find(e => e.id === item.messageId)?.from}
             </p>
           </div>
         ))}
