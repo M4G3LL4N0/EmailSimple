@@ -9,6 +9,27 @@ export interface PriorityFactors {
   engagement: number;
   /** 1-100 multiplier for related projects */
   projectMultiplier?: number;
+  /** Number of people CC'd/impacted */
+  stakeholderCount: number;
+  /** Number of related threads */
+  threadCount: number;
+  /** Days since last action */
+  staleness: number;
+  /** Confidence score of analysis */
+  confidence: number;
+}
+
+export interface PriorityInsight {
+  /** Key reason for priority */
+  reason: string;
+  /** Suggested action */
+  action: string;
+  /** Potential risks */
+  risks: string[];
+  /** Potential benefits */
+  benefits: string[];
+  /** Related context */
+  context: string[];
 }
 
 export interface PriorityScore {

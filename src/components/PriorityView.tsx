@@ -4,6 +4,23 @@ type PriorityItem = {
   reason: string;
   score: number;
   priority: "High" | "Medium" | "Low";
+  insights: {
+    keyReason: string;
+    suggestedAction: string;
+    risks: string[];
+    benefits: string[];
+    context: string[];
+  };
+  factors: {
+    urgency: number;
+    importance: number;
+    senderWeight: number;
+    engagement: number;
+    stakeholderCount: number;
+    threadCount: number;
+    staleness: number;
+    confidence: number;
+  };
 };
 
 const priorities: PriorityItem[] = [
@@ -13,6 +30,23 @@ const priorities: PriorityItem[] = [
     reason: "High urgency and blocking next steps.",
     score: 92,
     priority: "High",
+    insights: {
+      keyReason: "Contract approval is blocking $250k deal closure",
+      suggestedAction: "Review and approve by EOD today",
+      risks: ["Deal delay", "Client frustration", "Revenue impact"],
+      benefits: ["Deal closure", "Strengthened relationship", "Revenue realization"],
+      context: ["Client is strategic partner", "Deal has been in works for 3 months"]
+    },
+    factors: {
+      urgency: 95,
+      importance: 90,
+      senderWeight: 85,
+      engagement: 80,
+      stakeholderCount: 5,
+      threadCount: 3,
+      staleness: 1,
+      confidence: 92
+    }
   },
   {
     id: "2",
@@ -64,8 +98,20 @@ export function PriorityView() {
                   {item.title}
                 </h3>
                 <p className="mt-2 text-sm leading-7 text-white/65">
-                  {item.reason}
+                  {item.insights.keyReason}
                 </p>
+                <div className="mt-3 space-y-2">
+                  <div className="flex gap-2 text-xs text-white/60">
+                    <span>Urgency: {item.factors.urgency}</span>
+                    <span>•</span>
+                    <span>Importance: {item.factors.importance}</span>
+                    <span>•</span>
+                    <span>Stakeholders: {item.factors.stakeholderCount}</span>
+                  </div>
+                  <div className="text-xs text-white/60">
+                    Suggested action: {item.insights.suggestedAction}
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col items-end gap-2">
