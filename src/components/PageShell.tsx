@@ -1,19 +1,17 @@
-import { NavBar } from './NavBar';
-import { Footer } from './Footer'; // Keep working Footer integration
+import { ReactNode } from "react";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
 
 interface PageShellProps {
-  children: React.ReactNode;
-  className?: string;
+  children: ReactNode;
 }
 
-export function PageShell({ children, className }: PageShellProps) {
+export function PageShell({ children }: PageShellProps) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <NavBar />
-      <main className={`flex-1 ${className}`}>
-        {children}
-      </main>
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.08),transparent_30%),linear-gradient(180deg,#061018_0%,#05070b_45%,#030405_100%)] text-white">
+      <Header />
+      {children}
       <Footer />
-    </div>
+    </main>
   );
 }
