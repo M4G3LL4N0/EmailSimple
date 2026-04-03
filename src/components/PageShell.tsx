@@ -1,5 +1,5 @@
 import { NavBar } from './NavBar';
-import { Footer } from './Footer';
+import { Footer } from './Footer'; // Keep working Footer integration
 
 interface PageShellProps {
   children: React.ReactNode;
