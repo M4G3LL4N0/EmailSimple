@@ -1,6 +1,5 @@
-import { Header } from "@/components/Header";
-import dynamic from 'next/dynamic';
-import { Hero } from "@/components/Hero";
+import { PageShell } from "@/components/PageShell";
+import { PageHero } from "@/components/PageHero";
 import { ProblemSection } from "@/app/components/ProblemSection";
 import { FeatureSection } from "@/components/FeatureSection";
 import { HowItWorks } from "@/components/HowItWorks";
@@ -11,13 +10,17 @@ import { PricingSection } from "@/components/PricingSection";
 import { FAQSection } from "@/app/components/FAQSection";
 import { WaitlistSection } from "@/components/WaitlistSection";
 import { FinalCTA } from "@/app/components/FinalCTA";
-import { Footer } from "@/components/Footer";
 
 export default function Page() {
   return (
-    <main>
-      <Header />
-      <Hero />
+    <PageShell>
+      <PageHero
+        title="Your inbox, simplified into what matters"
+        subtitle="EmailSimple turns overwhelming email into a clean daily brief with priorities, deadlines, replies, follow-ups, and calendar-ready actions"
+        eyebrow="Inbox clarity, without inbox chaos"
+        cta={{ text: "Join the Waitlist", href: "#waitlist" }}
+        secondaryCta={{ text: "See the Product", href: "/dashboard" }}
+      />
       <ProblemSection />
       <FeatureSection />
       <HowItWorks />
@@ -28,7 +31,6 @@ export default function Page() {
       <FAQSection />
       <WaitlistSection />
       <FinalCTA />
-      <Footer />
-    </main>
+    </PageShell>
   );
 }
