@@ -2,6 +2,18 @@ import { EmailMessage } from '@/lib/types/email';
 
 export const MOCK_EMAILS: EmailMessage[] = [
   {
+    id: '0',
+    threadId: 'thread-exec',
+    from: 'key.investor@vc.com',
+    to: ['founders@emailsimple.com'],
+    subject: 'Follow-up: Series A funding',
+    body: 'Following our meeting - I\'d like to schedule a follow-up call to discuss the round. The team was impressed with your traction metrics and waitlist growth. Can we lock in a time next week?',
+    date: new Date('2026-03-30T08:15:00'),
+    isRead: false,
+    priorityScore: 95,
+    summary: 'High-value investor follow-up on funding round'
+  },
+  {
     id: '1',
     threadId: 'thread-1',
     from: 'ceo@company.com',

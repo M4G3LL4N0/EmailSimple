@@ -8,7 +8,12 @@ export function DashboardHeader() {
       <div className="container h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 font-bold text-lg tracking-tight">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-b from-[#7ec4ff] to-[#4ba6ff] shadow-[0_10px_24px_rgba(103,183,255,0.3)]" />
-          EmailSimple
+          <span className="flex items-center gap-2">
+            EmailSimple 
+            <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
+              ALPHA
+            </span>
+          </span>
         </Link>
 
         <nav className="flex items-center gap-7 text-[15px] text-muted">
