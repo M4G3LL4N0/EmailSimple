@@ -17,17 +17,24 @@ export default function DashboardPage() {
         <DashboardSidebar />
         
         <main className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_0.8fr] gap-8 pb-20">
+          {/* Left Column */}
           <div className="space-y-8">
             <DailyBrief />
-            <ImportantThreads />
-            <ActionItems />
+            
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="col-span-2">
+                <PriorityView />
+              </div>
+              <DeadlineTimeline />
+              <ActionCenter />
+            </section>
           </div>
           
+          {/* Right Column */}
           <div className="space-y-8">
+            <FollowUpRadar />
+            <AIReplyAssist />
             <CalendarSuggestions />
-            <PriorityVisualization />
-            <FollowUpRisk />
-            <ReplySuggestions />
           </div>
         </main>
       </div>
