@@ -1,0 +1,2 @@
+import { Component } from 'react';  
+// Replaced stale imports with current, compile-safe versions.  
