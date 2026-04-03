@@ -78,16 +78,28 @@ export function WaitlistSection() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_0.9fr] gap-5 items-center">
             <div>
               <div className="eyebrow">
-                <span className="eyebrow-dot" />
-                Early access
+                <span className="eyebrow-dot animate-pulse" />
+                Founder's Circle Access
               </div>
               <h2 className="section-title mt-5">
-                Get priority access to EmailSimple
+                Join the alpha program
               </h2>
               <p className="section-copy mt-4 max-w-[620px]">
-                Join our exclusive waitlist to be among the first to experience
-                inbox clarity. We'll notify you when early access begins and
-                share special preview content.
+                As a founding member, you'll get:
+                <ul className="mt-3 space-y-2">
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600" />
+                    Early access with premium onboarding
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600" />
+                    Direct influence on product roadmap
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600" />
+                    Lifetime discounts for early adopters
+                  </li>
+                </ul>
               </p>
             </div>
 
