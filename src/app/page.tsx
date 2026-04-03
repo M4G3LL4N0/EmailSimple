@@ -1,20 +1,20 @@
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
-import { ProblemSection } from '@/components/ProblemSection';
+import { ProblemSection } from '@/app/components/ProblemSection';
 import { FeatureSection } from '@/components/FeatureSection';
 import { HowItWorks } from '@/components/HowItWorks';
-import { DifferentiationSection } from '@/components/DifferentiationSection';
-import { UseCasesSection } from '@/components/UseCasesSection';
-import { MarketOpportunity } from '@/components/MarketOpportunity';
+import { DifferentiationSection } from '@/app/components/DifferentiationSection';
+import { UseCasesSection } from '@/app/components/UseCasesSection';
+import { MarketOpportunity } from '@/app/components/MarketOpportunity';
 import { PricingSection } from '@/components/PricingSection';
-import { FAQSection } from '@/components/FAQSection';
+import { FAQSection } from '@/app/components/FAQSection';
 import { WaitlistSection } from '@/components/WaitlistSection';
-import { FinalCTA } from '@/components/FinalCTA';
+import { FinalCTA } from '@/app/components/FinalCTA';
 import { Footer } from '@/components/Footer';
 
 export default function Page() {
   return (
-    <main className="bg-[#070F1D]">
+    <main>
       <Header />
       <Hero />
       <ProblemSection />
