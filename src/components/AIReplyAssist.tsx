@@ -5,11 +5,24 @@ import { MOCK_EMAILS } from '@/lib/mock-emails';
 export const AIReplyAssist: FC = () => {
   const [selectedEmail, setSelectedEmail] = useState<EmailMessage | null>(null);
   const [reply, setReply] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleGenerateReply = () => {
-    if (selectedEmail) {
-      // Simulate AI-generated reply
+  const handleGenerateReply = async () => {
+    if (!selectedEmail) return;
+    
+    try {
+      setIsGenerating(true);
+      setError(null);
+      
+      // Simulate async API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
       setReply(`Hi ${selectedEmail.from.split('@')[0]},\n\nThank you for your message. I'll look into this and get back to you soon.\n\nBest regards,\n[Your Name]`);
+    } catch (err) {
+      setError('Failed to generate reply. Please try again.');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -38,9 +51,15 @@ export const AIReplyAssist: FC = () => {
             <button
               onClick={handleGenerateReply}
               className="primary-btn w-full"
+              disabled={isGenerating}
             >
-              Generate Reply
+              {isGenerating ? 'Generating...' : 'Generate Reply'}
             </button>
+            {error && (
+              <div className="text-red-400 text-[13px] mt-2">
+                {error}
+              </div>
+            )}
           </div>
         )}
 

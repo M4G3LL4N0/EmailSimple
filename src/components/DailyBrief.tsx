@@ -1,10 +1,22 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { DailyBrief } from '@/lib/extraction/brief';
 import { generateDailyBrief } from '@/lib/extraction/brief';
 import { MOCK_EMAILS } from '@/lib/mock-emails';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const DailyBrief: FC = () => {
-  const brief = generateDailyBrief(MOCK_EMAILS);
+  const [brief, setBrief] = useState<DailyBrief | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate async data loading
+    const timer = setTimeout(() => {
+      setBrief(generateDailyBrief(MOCK_EMAILS));
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
   
   const getPriorityLabel = (priority: number) => {
     if (priority > 0.8) return 'Critical';
@@ -47,11 +59,20 @@ export const DailyBrief: FC = () => {
       </div>
 
       <div className="grid gap-3.5">
-        {items.map((item) => (
-          <div
-            key={item.title}
-            className="glass-soft rounded-[22px] p-4.5"
-          >
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="glass-soft rounded-[22px] p-4.5">
+              <Skeleton className="h-5 w-3/4 mb-3" />
+              <Skeleton className="h-4 w-1/2 mb-2" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          ))
+        ) : brief && items.length > 0 ? (
+          items.map((item) => (
+            <div
+              key={item.type + item.data.id}
+              className="glass-soft rounded-[22px] p-4.5"
+            >
             <div className="flex items-center justify-between gap-4">
               <h3 className="m-0 text-[17px] leading-[1.2] tracking-tight">
                 {item.type === 'priority' 
