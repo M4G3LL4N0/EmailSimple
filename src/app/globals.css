@@ -10,11 +10,11 @@
   --indigo: #4f46e5;
   --midnight: #0a0f1f;
   --space: #070b17;
-  --glow: rgba(109, 140, 255, 0.2);
-  --glow-gold: rgba(255, 216, 109, 0.15);
-  --elevation-1: rgba(255, 255, 255, 0.05);
-  --elevation-2: rgba(255, 255, 255, 0.08);
-  --elevation-3: rgba(255, 255, 255, 0.12);
+  --glow: rgba(109, 140, 255, 0.3);
+  --glow-gold: rgba(255, 216, 109, 0.2);
+  --elevation-1: rgba(255, 255, 255, 0.08);
+  --elevation-2: rgba(255, 255, 255, 0.12);
+  --elevation-3: rgba(255, 255, 255, 0.18);
 }
 
 * {
@@ -59,16 +59,16 @@ button {
 .glass {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.08) 100%
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.1) 100%
   );
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   box-shadow: 
-    0 8px 32px -8px rgba(0, 0, 0, 0.2),
-    0 4px 16px -4px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
+    0 8px 32px -8px rgba(0, 0, 0, 0.25),
+    0 4px 16px -4px rgba(0, 0, 0, 0.15),
+    inset 0 0 0 1px rgba(255,255,255,0.12);
   border-radius: 24px;
 }
 
@@ -82,7 +82,7 @@ button {
 .hero-grid {
   position: absolute;
   inset: 0;
-  opacity: 0.22;
+  opacity: 0.18;
   pointer-events: none;
   background-image:
     linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
