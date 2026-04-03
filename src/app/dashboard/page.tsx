@@ -5,7 +5,7 @@ import { ActionCenter } from "@/components/dashboard/ActionCenter";
 
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_28%),linear-gradient(180deg,#061018_0%,#05070b_45%,#030405_100%)] text-white">
+    <PageShell className="bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_28%)]">
       <div className="container py-10">
         <div className="mb-8">
           <p className="text-xs uppercase tracking-[0.18em] text-white/45">

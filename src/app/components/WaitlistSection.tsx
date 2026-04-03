@@ -70,7 +70,6 @@ export function WaitlistSection() {
 
   return (
     <section id="waitlist" className="py-[100px] relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,11,23,0.3)] to-[rgba(7,11,23,0.9)]" />
       <div className="container">
         <div className="glass rounded-[34px] p-[34px] relative overflow-hidden">
           <div className="absolute top-[-80px] right-[-60px] w-[260px] h-[260px] rounded-full bg-[radial-gradient(circle,rgba(103,183,255,0.22),transparent_70%)] pointer-events-none" />
