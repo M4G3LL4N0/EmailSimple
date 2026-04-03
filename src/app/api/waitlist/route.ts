@@ -1,5 +1,19 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+interface WaitlistRequest {
+  name: string;
+  email: string;
+}
+
+interface SuccessResponse {
+  success: boolean;
+}
+
+interface ErrorResponse {
+  error: string;
+}
 
 interface WaitlistRequest {
   name: string;

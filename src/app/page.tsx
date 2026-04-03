@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import dynamic from 'next/dynamic';
 import { Hero } from "@/components/Hero";
 import { ProblemSection } from "@/app/components/ProblemSection";
 import { FeatureSection } from "@/components/FeatureSection";
