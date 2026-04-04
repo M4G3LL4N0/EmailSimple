@@ -1,19 +1,5 @@
 import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-
-interface WaitlistRequest {
-  name: string;
-  email: string;
-}
-
-interface SuccessResponse {
-  success: boolean;
-}
-
-interface ErrorResponse {
-  error: string;
-}
 
 interface WaitlistRequest {
   name: string;
@@ -32,10 +18,7 @@ export async function POST(request: Request) {
 
   // If Supabase isn't configured, still return success
   if (!supabase) {
-    return NextResponse.json(
-      { success: true },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true }, { status: 200 });
   }
 
   try {
@@ -52,10 +35,7 @@ export async function POST(request: Request) {
       throw error;
     }
 
-    return NextResponse.json(
-      { success: true },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to submit. Please try again.' },
