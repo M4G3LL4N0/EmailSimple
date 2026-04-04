@@ -17,7 +17,7 @@ export function Hero() {
           <div>
             <div className="eyebrow mb-6">
               <span className="eyebrow-dot animate-pulse" />
-              Inbox clarity, without inbox chaos
+              Inbox, simplified
             </div>
 
             <h1 className="mb-8 text-[clamp(3.5rem,8vw,6.5rem)] leading-[0.95] tracking-tight max-w-[840px] font-bold">
@@ -29,8 +29,7 @@ export function Hero() {
             </h1>
 
             <p className="text-muted text-[1.15rem] leading-[1.7] max-w-[600px] tracking-[-0.01em]">
-              EmailSimple turns overwhelming email into a clean daily brief with
-              priorities, deadlines, replies, follow-ups, and calendar-ready
+              EmailSimple turns overwhelming email into a clean daily brief with              priorities, deadlines, replies, follow-ups, and calendar-ready
               actions so you can stop scanning everything and start handling the
               few things that count.
             </p>
@@ -100,8 +99,7 @@ function DashboardPreview() {
             body: "A career-related thread resurfaced and likely deserves quick attention.",
           },
         ].map((item) => (
-          <div
-            key={item.title}
+          <div            key={item.title}
             className="glass-soft rounded-[22px] p-4.5"
           >
             <div className="flex items-center justify-between gap-4">
