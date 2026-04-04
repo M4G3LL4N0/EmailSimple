@@ -39,6 +39,8 @@ export interface PriorityScore {
   title: string;
   /** Concise explanation */
   reason: string;
+  /** Key reason for priority ranking */
+  keyReason: string;
   /** 1-100 computed score */
   score: number;
   /** Assigned level */

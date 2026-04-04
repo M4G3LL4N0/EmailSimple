@@ -54,6 +54,23 @@ const priorities: PriorityItem[] = [
     reason: "Payment-related thread may stall.",
     score: 84,
     priority: "High",
+    insights: {
+      keyReason: "Payment thread requires response to avoid delays",
+      suggestedAction: "Reply with payment confirmation",
+      risks: ["Payment delay", "Service interruption"],
+      benefits: ["Timely payment", "Client satisfaction"],
+      context: ["Client is on net-30 terms", "Invoice is 5 days old"]
+    },
+    factors: {
+      urgency: 84,
+      importance: 80,
+      senderWeight: 70,
+      engagement: 75,
+      stakeholderCount: 2,
+      threadCount: 1,
+      staleness: 5,
+      confidence: 85
+    }
   },
   {
     id: "3",
@@ -61,6 +78,23 @@ const priorities: PriorityItem[] = [
     reason: "Opportunity thread resurfaced.",
     score: 76,
     priority: "Medium",
+    insights: {
+      keyReason: "Potential career opportunity worth exploring",
+      suggestedAction: "Schedule intro call if interested",
+      risks: ["Missed opportunity"],
+      benefits: ["Career advancement"],
+      context: ["From reputable tech company", "Initial contact was 2 weeks ago"]
+    },
+    factors: {
+      urgency: 60,
+      importance: 75,
+      senderWeight: 65,
+      engagement: 70,
+      stakeholderCount: 1,
+      threadCount: 1,
+      staleness: 14,
+      confidence: 80
+    }
   },
   {
     id: "4",
@@ -68,6 +102,23 @@ const priorities: PriorityItem[] = [
     reason: "Scheduling signal should be resolved.",
     score: 63,
     priority: "Low",
+    insights: {
+      keyReason: "Standard meeting coordination",
+      suggestedAction: "Confirm availability",
+      risks: ["Double-booking"],
+      benefits: ["Calendar clarity"],
+      context: ["Internal team meeting", "Proposed for next week"]
+    },
+    factors: {
+      urgency: 50,
+      importance: 60,
+      senderWeight: 55,
+      engagement: 65,
+      stakeholderCount: 3,
+      threadCount: 1,
+      staleness: 2,
+      confidence: 75
+    }
   },
 ];
 
@@ -90,7 +141,7 @@ export function PriorityView() {
       </div>
 
       <div className="grid gap-4">
-        {priorities.map((item) => (
+        {priorities.filter(item => item && item.insights && item.insights.keyReason).map((item) => (
           <article key={item.id} className="glass-soft rounded-[22px] p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
