@@ -11,8 +11,17 @@ export interface BriefItemBase {
   status: "new" | "seen" | "completed" | "dismissed";
 }
 
-export type PriorityLevel = 
-  "critical" | "high" | "medium" | "low" | "monitoring";
+export const PRIORITY_LEVELS = ["critical", "high", "medium", "low", "monitoring"] as const;
+export type PriorityLevel = typeof PRIORITY_LEVELS[number];
+
+export type BriefItemStatus = "new" | "seen" | "completed" | "dismissed";
+export interface BriefItemStats {
+  overdueCount: number;
+  completedToday: number;
+  deadlineCount: number;
+  followUpCount: number;
+  actionItemCount: number;
+}
 
 export interface ActionBriefItem extends BriefItemBase {
   type: "action";

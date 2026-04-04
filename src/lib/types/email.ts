@@ -1,12 +1,15 @@
+export interface EmailParticipant {
+  address: string;
+  name?: string;
+  isInternal?: boolean;
+  role?: "sender" | "recipient" | "cc" | "bcc";
+  importance?: number; // 0-100 sender importance score
+}
+
 export interface EmailMessage {
   id: string;
   threadId: string;
-  from: {
-    address: string;
-    name?: string;
-    isInternal?: boolean;
-    importance?: number; // 0-100 sender importance score
-  };
+  from: EmailParticipant;
   to: {
     address: string;
     name?: string;

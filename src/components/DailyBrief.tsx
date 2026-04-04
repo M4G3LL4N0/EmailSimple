@@ -45,7 +45,8 @@ const priorityClasses: Record<BriefItem["priority"], string> = {
 
 export function DailyBrief() {
   return (
-    <section className="glass rounded-[28px] p-6">
+    <section className="glass rounded-[28px] p-6 border border-white/5">
+      <div className="flex items-center justify-between pb-6 border-b border-white/5 mb-6">
       <div className="mb-5 flex items-center justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-white/45">

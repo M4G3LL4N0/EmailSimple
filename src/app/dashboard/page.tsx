@@ -22,18 +22,22 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-10">
           <DailyBrief />
-          <PriorityView />
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <DeadlineTimeline />
-            <ActionCenter />
-          </div>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-7">
+            <div className="lg:col-span-4 grid gap-8">
+              <PriorityView />
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <FollowUpRadar />
+                <DeadlineTimeline />
+              </div>
+            </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <FollowUpRadar />
-            <AIReplyAssist />
+            <div className="lg:col-span-3 grid gap-8">
+              <ActionCenter />
+              <AIReplyAssist />
+            </div>
           </div>
         </div>
       </div>
