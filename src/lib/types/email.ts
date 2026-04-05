@@ -38,15 +38,27 @@ export interface EmailHeader {
 export interface EmailMessage {
   id: string;
   threadId: string;
+  providerId: string;
+  providerMessageId: string;
   from: EmailParticipant;
   to: EmailParticipant[];
   cc?: EmailParticipant[];
   bcc?: EmailParticipant[];
   subject: string;
-  body: string;
-  /** Date received */
+  body: {
+    text: string;
+    html?: string;
+  };
   date: Date;
   isRead: boolean;
+  metadata: {
+    isArchived: boolean;
+    isStarred: boolean;
+    isSpam: boolean;
+    isTrash: boolean;
+    size: number; // bytes
+    headers: Record<string, string>;
+  };
   /** List of labels/tags */
   labels: string[];
   /** Attachments if any */

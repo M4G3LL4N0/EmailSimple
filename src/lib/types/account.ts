@@ -47,8 +47,23 @@ export interface AccountConnection {
   provider: ProviderType;
   email: string;
   status: 'pending' | 'connected' | 'disconnected' | 'error';
-  connectedAt?: Date;
+  capabilities: {
+    realtime: boolean;
+    batch: boolean;
+    attachments: boolean;
+    labels: boolean;
+  };
+  constraints: {
+    rateLimit: number; // calls per minute
+    quota: number; // MB per day
+  };
+  connectedAt: Date;
   lastSyncAt?: Date;
+  syncState: {
+    cursor?: string;
+    checkpoint?: string;
+    expiresAt?: Date;
+  };
 }
 
 export interface SyncJob {

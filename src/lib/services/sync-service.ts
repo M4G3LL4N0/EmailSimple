@@ -39,12 +39,21 @@ export class SyncService {
     this.syncStateCache.set(accountId, updated);
   }
   
-  async startSync(accountId: string): Promise<SyncJob> {
+  async startSync(accountId: string, syncType: 'full' | 'delta' = 'delta'): Promise<SyncJob> {
+    // Get provider instance
+    const provider = this.providerRegistry.get(accountId);
+    if (!provider) throw new Error(`No provider registered for account ${accountId}`);
+
+    // Start sync session with provider
+    const session = await provider.startSync(syncType);
+    
     // Create sync job record
     const { data: job, error } = await this.supabase
       .from('sync_jobs')
       .insert({
         account_id: accountId,
+        session_id: session.id,
+        type: syncType,
         status: 'running',
         started_at: new Date().toISOString()
       })

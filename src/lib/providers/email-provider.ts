@@ -1,26 +1,34 @@
 // Base email provider interface and types
 export interface EmailProvider {
-  // Authentication
-  authenticate(): Promise<AuthResult>;
-  refreshToken(): Promise<void>;
-  validateCredentials(): Promise<boolean>;
+  // Connection management
+  connect(): Promise<ConnectionStatus>;
+  disconnect(): Promise<void>;
+  getConnectionHealth(): Promise<ConnectionMetrics>;
   
   // Sync operations
-  getDeltaSync(options: DeltaSyncOptions): Promise<DeltaSyncResult>;
-  getFullSync(options: FullSyncOptions): Promise<FullSyncResult>;
+  startSync(syncType: 'full' | 'delta'): Promise<SyncSession>;
+  pauseSync(sessionId: string): Promise<void>;
+  resumeSync(sessionId: string): Promise<SyncSession>;
+  getSyncProgress(sessionId: string): Promise<SyncProgress>;
   
-  // Thread operations
+  // Thread operations  
+  listThreads(options: {
+    after?: Date;
+    before?: Date;
+    labels?: string[];
+    limit?: number;
+  }): AsyncIterable<ThreadBatch>;
+  
   getThread(threadId: string): Promise<NormalizedThread>;
-  getThreads(filter: ThreadFilter): Promise<ThreadSummary[]>;
   batchGetThreads(threadIds: string[]): Promise<NormalizedThread[]>;
   
-  // Message operations  
-  getMessage(messageId: string): Promise<NormalizedMessage>;
-  batchGetMessages(messageIds: string[]): Promise<NormalizedMessage[]>;
-  
-  // Sync state
-  getSyncState(): Promise<SyncState>;
-  updateSyncState(state: Partial<SyncState>): Promise<void>;
+  // Message operations
+  listMessages(options: {
+    threadId?: string;
+    after?: Date;
+    before?: Date;
+    limit?: number;
+  }): AsyncIterable<MessageBatch>;
   
   // Webhooks
   setupWebhook?(config: WebhookConfig): Promise<WebhookInfo>;
