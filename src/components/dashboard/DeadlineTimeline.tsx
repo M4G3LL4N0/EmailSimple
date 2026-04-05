@@ -1,7 +1,22 @@
 const deadlines = [
-  { title: "Send contract revisions", due: "Today, 4:00 PM" },
-  { title: "Review pricing deck", due: "Tomorrow, 10:00 AM" },
-  { title: "Confirm Thursday meeting", due: "Tomorrow, 2:00 PM" },
+  { 
+    title: "Send contract revisions to Acme Corp", 
+    due: "Today, 4:00 PM",
+    urgency: "high",
+    context: "Legal team blocked • Final review complete"
+  },
+  { 
+    title: "Review Q2 pricing deck", 
+    due: "Tomorrow, 10:00 AM",
+    urgency: "medium",
+    context: "Sales team presentation prep • 3 slides need approval"
+  },
+  { 
+    title: "Confirm Thursday leadership meeting",
+    due: "Tomorrow, 2:00 PM", 
+    urgency: "medium",
+    context: "5 execs attending • Catering needs final numbers"
+  },
 ];
 
 export function DeadlineTimeline() {

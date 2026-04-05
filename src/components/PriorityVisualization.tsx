@@ -5,7 +5,9 @@ export function PriorityVisualization() {
         Priority Heatmap
       </h2>
       <p className="mb-6 text-sm text-white/65">
-        Our AI analyzes 23 factors including stakeholder importance, deadlines, and response patterns to surface what truly matters.
+        Priority scores consider: contractual obligations, financial impact, stakeholder seniority, 
+        response delays, and 19 other factors. Items in red require attention today to avoid 
+        measurable business impact.
       </p>
       <div className="mb-6 glass-soft rounded-[16px] p-4 text-sm">
         <div className="flex items-center gap-2 text-blue-400">

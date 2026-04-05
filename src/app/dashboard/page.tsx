@@ -17,10 +17,11 @@ export default function DashboardPage() {
             Your Operating Layer for Email
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-[-0.05em] text-white">
-            Inbox Intelligence Platform
+            Your Critical Path
           </h1>
           <p className="mt-3 max-w-2xl text-white/65">
-            EmailSimple extracts what matters and puts it where it belongs in your workflow - priorities, deadlines, follow-ups, and actions.
+            EmailSimple has analyzed 47 threads and surfaced the 9 items that will impact your business today. 
+            Focus here first, then check your regular inbox.
           </p>
           <div className="mt-4 flex gap-3">
             <button className="primary-btn">Take the Tour</button>

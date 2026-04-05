@@ -1,7 +1,19 @@
 const actions = [
-  "Reply to contract approval thread",
-  "Add Thursday schedule request to calendar",
-  "Send invoice follow-up response",
+  {
+    text: "Approve client contract (5 min)",
+    context: "Legal team waiting • Due today",
+    action: "Sign and return"
+  },
+  {
+    text: "Reschedule Thursday meeting (2 min)", 
+    context: "Time conflict detected • 2 participants",
+    action: "Propose new time"
+  },
+  {
+    text: "Process overdue invoice (3 min)",
+    context: "$4,500 payment • Vendor follow-up",
+    action: "Approve payment"
+  }
 ];
 
 export function ActionCenter() {
