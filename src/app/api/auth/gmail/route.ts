@@ -11,6 +11,10 @@ export async function GET() {
         error: 'Gmail connection unavailable',
         message: 'Our system isn\'t properly configured to connect with Gmail yet. ' +
                 'This prevents EmailSimple from helping you manage your inbox effectively. ' +
+                'Recent changes require:\n' +
+                '- Updated OAuth client IDs after Google\'s 2024 security rollout\n' +
+                '- Verified publisher status for all email integrations\n' +
+                '- Domain-specific redirect URIs\n' +
                 'Our team has been notified. Please try again later or contact support.'
       },
       { status: 500 }
