@@ -3,6 +3,53 @@ import { EmailProvider, AuthResult, ThreadSummary, NormalizedThread, NormalizedM
 import { EmailParticipant } from '@/lib/types/email';
 
 export class GmailProvider implements EmailProvider {
+  // ======================
+  // Class Properties
+  // ======================
+  readonly provider = 'gmail' as const;
+  
+  private lastSyncStatus = {
+    timestamp: new Date(),
+    state: 'idle' as 'idle' | 'syncing' | 'error',
+    stats: {
+      threadsProcessed: 0,
+      messagesProcessed: 0,
+      errors: 0,
+      syncDuration: 0,
+      apiCalls: 0,
+      cacheHits: 0,
+      bandwidthUsed: 0,
+      lastSyncDuration: 0,
+      avgSyncDuration: 0,
+      syncCount: 0
+    },
+    lastError: null as null | {
+      type: string;
+      message: string;
+      timestamp: Date;
+    },
+    summary: {
+      unreadCount: 0,
+      highPriority: 0,
+      pendingActions: 0
+    }
+  };
+
+  // ======================
+  // Constructor
+  // ======================
+  constructor(
+    private accountId: string,
+    private accessToken: string,
+    private refreshToken?: string
+  ) {}
+
+  // ======================
+  // Authentication Methods
+  // ======================
+  // ======================
+  // Classification Helpers
+  // ======================
   private classifyPriority(context: {
     labels: string[];
     hasDeadlineKeywords: boolean;
@@ -115,6 +162,9 @@ export class GmailProvider implements EmailProvider {
 
     return 'Default classification';
   }
+  // ======================
+  // Dashboard Methods
+  // ======================
   async getSummaryStrip() {
     const status = await this.getSyncStatus();
     const threads = await this.listThreads({ maxResults: 1 });
@@ -134,6 +184,9 @@ export class GmailProvider implements EmailProvider {
         : 'Calculating...'
     };
   }
+  // ======================
+  // Error Handling
+  // ======================
   private trackError(type: string, message: string) {
     this.lastSyncStatus.lastError = {
       type,
@@ -169,6 +222,9 @@ export class GmailProvider implements EmailProvider {
     }
   };
 
+  // ======================
+  // Normalization Helpers
+  // ======================
   private normalizeParticipant(header: any): EmailParticipant {
     if (!header?.value) {
       return {
@@ -258,6 +314,9 @@ export class GmailProvider implements EmailProvider {
     }
   }
   
+  // ======================
+  // Thread Operations
+  // ======================
   async listThreads(options?: ThreadListOptions): Promise<ThreadSummary[]> {
     if (!this.accessToken) {
       throw new Error('Please authenticate first');
@@ -547,6 +606,9 @@ export class GmailProvider implements EmailProvider {
     }
   }
   
+  // ======================
+  // Message Operations
+  // ======================
   async getMessage(messageId: string): Promise<NormalizedMessage> {
     // Design: Would call Gmail API users.messages.get
     // GET https://gmail.googleapis.com/gmail/v1/users/me/messages/{messageId}?format=full
@@ -554,6 +616,9 @@ export class GmailProvider implements EmailProvider {
     throw new Error('getMessage not implemented - design phase');
   }
   
+  // ======================
+  // Webhook Operations
+  // ======================
   async setupWebhook(config: WebhookConfig): Promise<WebhookInfo> {
     // Design: Gmail push notifications require Cloud Pub/Sub
     // Would create a Pub/Sub topic and subscription, then configure Gmail to publish
@@ -565,6 +630,9 @@ export class GmailProvider implements EmailProvider {
     throw new Error('setupWebhook not implemented - design phase');
   }
   
+  // ======================
+  // Sync Operations
+  // ======================
   async getSyncStatus() {
     const status = {
       ...this.lastSyncStatus,
@@ -586,6 +654,9 @@ export class GmailProvider implements EmailProvider {
     return status;
   }
 
+  // ======================
+  // Security Operations
+  // ======================
   async verifyWebhook(payload: unknown): Promise<boolean> {
     // Verify basic payload structure locally first
     if (typeof payload !== 'object' || payload === null) {
