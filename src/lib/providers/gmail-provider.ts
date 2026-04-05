@@ -56,25 +56,25 @@ export class GmailProvider implements EmailProvider {
 
     // Securely prepare refresh request
     try {
-      const encodedParams = new URLSearchParams({
-        client_id: encodeURIComponent(process.env.GOOGLE_CLIENT_ID || ''),
-        client_secret: encodeURIComponent(process.env.GOOGLE_CLIENT_SECRET || ''),
-        grant_type: 'refresh_token',
-        refresh_token: encodeURIComponent(this.refreshToken)
-      });
+      const url = new URL('https://oauth2.googleapis.com/token');
+      const body = [
+        `client_id=${encodeURIComponent(process.env.GOOGLE_CLIENT_ID || '')}`,
+        `client_secret=${encodeURIComponent(process.env.GOOGLE_CLIENT_SECRET || '')}`,
+        `grant_type=refresh_token`,
+        `refresh_token=${encodeURIComponent(this.refreshToken)}`
+      ].join('&');
 
-      const response = await fetch('https://oauth2.googleapis.com/token', {
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json'
         },
-        body: encodedParams
+        body
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error_description || 'Refresh token rejected by Google');
+        throw new Error(`Token refresh failed: ${response.statusText}`);
       }
 
       const data = await response.json();
