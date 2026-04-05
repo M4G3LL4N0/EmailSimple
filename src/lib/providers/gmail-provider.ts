@@ -3,6 +3,22 @@ import { EmailProvider, AuthResult, ThreadSummary, NormalizedThread, NormalizedM
 import { EmailParticipant } from '@/lib/types/email';
 
 export class GmailProvider implements EmailProvider {
+  private normalizeParticipant(header: any): EmailParticipant {
+    if (!header?.value) {
+      return {
+        address: 'unknown',
+        name: 'Unknown',
+        role: 'participant'
+      };
+    }
+
+    const match = header.value.match(/(?:"?([^"]*)"?\s)?(?:<?(.+?@[^>]+)>?)/);
+    return {
+      address: match?.[2] || header.value,
+      name: match?.[1] || match?.[2]?.split('@')[0] || header.value,
+      role: 'participant'
+    };
+  }
   readonly provider = 'gmail' as const;
   
   constructor(
@@ -77,38 +93,148 @@ export class GmailProvider implements EmailProvider {
   }
   
   async listThreads(options?: ThreadListOptions): Promise<ThreadSummary[]> {
-    // Efficient thread listing allows EmailSimple to quickly surface important
-    // conversations while respecting your Gmail organization and labels.
-    // Particularly timely because:
-    // - Google's new batch APIs allow 50% faster thread listing (2024 update)
-    // - Modern inboxes average 300+ daily threads needing smart prioritization
-    // - Latest AI models can now extract true importance from thread patterns
-    // Design: Would call Gmail API users.threads.list
-    // Example: GET https://gmail.googleapis.com/gmail/v1/users/me/threads
-    // Would map Gmail's thread format to ThreadSummary
-    throw new Error(
-      'We\'re having trouble loading your emails. ' +
-      'This feature requires Gmail read permissions. ' +
-      'Please check your account permissions and try again.'
-    );
+    if (!this.accessToken) {
+      throw new Error('Please authenticate first');
+    }
+
+    try {
+      const url = new URL('https://gmail.googleapis.com/gmail/v1/users/me/threads');
+      if (options) {
+        if (options.maxResults) url.searchParams.set('maxResults', String(options.maxResults));
+        if (options.pageToken) url.searchParams.set('pageToken', options.pageToken);
+        if (options.query) url.searchParams.set('q', options.query);
+      }
+
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch threads');
+      }
+
+      const data = await response.json();
+      return data.threads?.map((thread: any) => ({
+        id: thread.id,
+        providerThreadId: thread.id,
+        subject: thread.snippet, // Will be enhanced with full subject later
+        snippet: thread.snippet,
+        participants: [], // Will be populated in getThread
+        lastMessageDate: new Date(Number(thread.internalDate)),
+        messageCount: thread.estimateCount || 1,
+        labels: thread.labelIds || [],
+        unread: thread.labelIds?.includes('UNREAD') || false,
+        // Decision UX metadata
+        metadata: {
+          priorityScore: 0, // Will be calculated by intelligence service
+          requiresAction: thread.labelIds?.includes('IMPORTANT') || false,
+          hasDeadline: false, // Will be detected from content
+          stakeholders: [] // Will be extracted from participants
+        }
+      })) || [];
+    } catch (error) {
+      throw new Error(
+        'We couldn\'t load your email threads. ' +
+        'This may be a temporary issue - please try again later.'
+      );
+    }
   }
   
   async getThread(threadId: string): Promise<NormalizedThread> {
-    // First validate the thread ID locally
     if (typeof threadId !== 'string' || threadId.length < 5) {
-      throw new Error('Invalid thread ID.');
+      throw new Error('Invalid thread ID format');
     }
 
     if (!this.accessToken) {
-      throw new Error(
-        'Missing access token. Please refresh your Gmail connection.'
-      );
+      throw new Error('Please authenticate first');
     }
 
-    throw new Error(
-      'Thread loading temporarily unavailable. ' + 
-      'We\'re improving our email fetching reliability.'
-    );
+    try {
+      // Get thread metadata
+      const threadUrl = new URL(`https://gmail.googleapis.com/gmail/v1/users/me/threads/${threadId}`);
+      threadUrl.searchParams.set('format', 'full');
+      
+      const threadRes = await fetch(threadUrl, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Accept': 'application/json'
+        }
+      });
+
+      if (!threadRes.ok) {
+        throw new Error('Failed to fetch thread');
+      }
+
+      const threadData = await threadRes.json();
+      
+      // Extract decision-relevant data
+      const participants = new Set<string>();
+      let hasAttachments = false;
+      let hasDeadlineKeywords = false;
+      const deadlineKeywords = ['due', 'deadline', 'by', 'before', 'asap'];
+      
+      const messages = threadData.messages?.map((msg: any) => {
+        // Process participants
+        const from = this.normalizeParticipant(msg.payload?.headers?.find((h: any) => h.name === 'From'));
+        participants.add(from.address);
+        
+        // Check for attachments
+        if (msg.payload?.parts?.some((p: any) => p.filename)) {
+          hasAttachments = true;
+        }
+        
+        // Check for deadline language
+        const body = msg.snippet || '';
+        if (deadlineKeywords.some(kw => body.toLowerCase().includes(kw))) {
+          hasDeadlineKeywords = true;
+        }
+
+        return {
+          id: msg.id,
+          threadId,
+          from,
+          subject: msg.payload?.headers?.find((h: any) => h.name === 'Subject')?.value || '',
+          body: msg.snippet,
+          date: new Date(Number(msg.internalDate)),
+          // Additional decision context
+          metadata: {
+            isInternal: from.address.endsWith('@yourcompany.com'),
+            isCustomer: from.address.includes('@customer.')
+          }
+        };
+      }) || [];
+
+      return {
+        id: threadId,
+        provider: 'gmail',
+        accountId: this.accountId,
+        subject: threadData.messages?.[0]?.payload?.headers?.find((h: any) => h.name === 'Subject')?.value || '',
+        participants: Array.from(participants).map(address => ({
+          address,
+          name: address.split('@')[0],
+          role: 'participant'
+        })),
+        messages,
+        labels: threadData.labelIds || [],
+        unread: threadData.labelIds?.includes('UNREAD') || false,
+        // Enhanced decision metadata
+        decisionContext: {
+          hasAttachments,
+          hasDeadlineKeywords,
+          urgencyScore: hasDeadlineKeywords ? 0.8 : 0.2, // Will be refined by AI
+          actionRequired: threadData.labelIds?.includes('IMPORTANT') || false,
+          lastActivity: messages[messages.length - 1]?.date || new Date()
+        }
+      };
+    } catch (error) {
+      throw new Error(
+        'We couldn\'t load this email thread. ' +
+        'Please try again or contact support if this persists.'
+      );
+    }
   }
   
   async getThreadsSince(since: Date): Promise<ThreadSummary[]> {
