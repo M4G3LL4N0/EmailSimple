@@ -22,9 +22,18 @@ export function DashboardHeader() {
           <Link href="/settings" className="hover:text-white transition-colors">Settings</Link>
           <Link href="/help" className="hover:text-white transition-colors">Help</Link>
           <div className="w-px h-6 bg-white/10" />
-          <button className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-            Take Tour
-          </button>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-400"></span>
+              </span>
+              Analyzing 42 threads
+            </span>
+            <button className="font-medium text-white/80 hover:text-white transition-colors">
+              Take Product Tour
+            </button>
+          </div>
         </nav>
       </div>
     </header>
