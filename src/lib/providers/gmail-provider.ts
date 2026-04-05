@@ -3,6 +3,40 @@ import { EmailProvider, AuthResult, ThreadSummary, NormalizedThread, NormalizedM
 import { EmailParticipant } from '@/lib/types/email';
 
 export class GmailProvider implements EmailProvider {
+  private calculatePriorityScore(context: {
+    labels: string[];
+    participants: string[];
+    messageCount: number;
+    isUnread: boolean;
+  }): number {
+    let score = 0;
+    
+    // Base factors
+    if (context.labels.includes('IMPORTANT')) score += 30;
+    if (context.isUnread) score += 15;
+    if (context.participants.includes('me')) score += 20;
+    
+    // Thread length factor
+    score += Math.min(context.messageCount * 2, 20);
+    
+    return Math.min(score, 100);
+  }
+
+  private getIntelligenceSignals(thread: any): string[] {
+    const signals = [];
+    
+    if (thread.labelIds?.includes('IMPORTANT')) {
+      signals.push('marked-important');
+    }
+    if (thread.labelIds?.includes('UNREAD')) {
+      signals.push('unread');
+    }
+    if (thread.estimateCount > 3) {
+      signals.push('active-discussion');
+    }
+    
+    return signals;
+  }
   // ======================
   // Class Properties
   // ======================
@@ -57,17 +91,21 @@ export class GmailProvider implements EmailProvider {
     participants: string[];
     messageCount: number;
   }): 'critical' | 'important' | 'informational' {
-    // Critical: Directly addressed to me with deadline
-    if (context.hasDeadlineKeywords && context.participants.includes('me')) {
-      return 'critical';
-    }
-    
-    // Important: Labeled important or requires action
-    if (context.actionRequired || context.labels.includes('IMPORTANT')) {
-      return 'important';
-    }
-    
-    // Informational: Everything else
+    const participantWeight = context.participants.includes('me') ? 1.5 : 1;
+    const deadlineWeight = context.hasDeadlineKeywords ? 2 : 1;
+    const importantWeight = context.labels.includes('IMPORTANT') ? 1.8 : 1;
+    const actionWeight = context.actionRequired ? 1.5 : 1;
+    const threadLengthWeight = Math.min(context.messageCount / 5, 1.5);
+
+    const priorityScore = 
+      participantWeight * 
+      deadlineWeight * 
+      importantWeight * 
+      actionWeight * 
+      threadLengthWeight;
+
+    if (priorityScore > 2.5) return 'critical';
+    if (priorityScore > 1.5) return 'important';
     return 'informational';
   }
 
@@ -138,6 +176,28 @@ export class GmailProvider implements EmailProvider {
     }
 
     return steps.length > 0 ? steps : ['Review when time permits'];
+  }
+
+  private getConfidenceScore(context: {
+    labels: string[];
+    participants: string[];
+    messageCount: number;
+    hasDeadlineKeywords: boolean;
+  }): number {
+    // Score between 0-1 indicating how confident we are in the classification
+    let score = 0.5; // Base confidence
+    
+    // Positive factors
+    if (context.labels.includes('IMPORTANT')) score += 0.2;
+    if (context.hasDeadlineKeywords) score += 0.15;
+    if (context.participants.includes('me')) score += 0.1;
+    if (context.messageCount > 3) score += 0.05;
+
+    // Negative factors
+    if (context.participants.length > 5) score -= 0.1; // Group threads are harder to classify
+    if (context.messageCount > 10) score -= 0.05; // Long threads are more complex
+
+    return Math.min(Math.max(score, 0.3), 0.95); // Keep within reasonable bounds
   }
 
   private getClassificationReason(threadData: any): string {
@@ -359,7 +419,12 @@ export class GmailProvider implements EmailProvider {
         // Decision UX metadata
         metadata: {
           priorityLevel: 'informational', // Default classification
-          priorityScore: 0, // Will be calculated by intelligence service
+          priorityScore: this.calculatePriorityScore({
+            labels: thread.labelIds || [],
+            participants: [],
+            messageCount: thread.estimateCount || 1,
+            isUnread: thread.labelIds?.includes('UNREAD') || false
+          }),
           requiresAction: thread.labelIds?.includes('IMPORTANT') || false,
           hasDeadline: false, // Will be detected from content
           stakeholders: [], // Will be extracted from participants
@@ -380,7 +445,8 @@ export class GmailProvider implements EmailProvider {
             isUnread: thread.labelIds?.includes('UNREAD') || false,
             priority: 'informational',
             actionRequired: thread.labelIds?.includes('IMPORTANT') || false
-          })
+          }),
+          intelligenceSignals: this.getIntelligenceSignals(thread)
         }
       })) || [];
     } catch (error) {
@@ -498,6 +564,12 @@ export class GmailProvider implements EmailProvider {
             messageCount: messages.length
           }),
           classificationReason: this.getClassificationReason(threadData),
+          confidenceScore: this.getConfidenceScore({
+            labels: threadData.labelIds || [],
+            participants: Array.from(participants),
+            messageCount: messages.length,
+            hasDeadlineKeywords
+          }),
           nextSteps: this.getNextSteps({
             labels: threadData.labelIds || [],
             isUnread: threadData.labelIds?.includes('UNREAD') || false,
