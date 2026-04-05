@@ -1,3 +1,7 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
 type BriefItem = {
   id: string;
   title: string;
@@ -6,7 +10,7 @@ type BriefItem = {
   priority: "High" | "Medium" | "Low";
 };
 
-const briefItems: BriefItem[] = [
+const initialBriefItems: BriefItem[] = [
   {
     id: "1",
     title: "Client contract needs approval",
@@ -31,22 +35,28 @@ const briefItems: BriefItem[] = [
   {
     id: "4",
     title: "Recruiter reached back out",
-    meta: "Opportunity • Medium priority",
+    meta: "Opportunity • Low priority",
     body: "A career-related thread resurfaced and likely deserves quick attention.",
-    priority: "Medium",
+    priority: "Low",
   },
 ];
 
 const priorityClasses: Record<BriefItem["priority"], string> = {
-  High: "bg-red-500/15 text-red-200 border border-red-400/20",
-  Medium: "bg-amber-500/15 text-amber-200 border border-amber-400/20",
-  Low: "bg-emerald-500/15 text-emerald-200 border border-emerald-400/20",
+  High: "border border-red-400/20 bg-red-500/10 text-red-200",
+  Medium: "border border-amber-400/20 bg-amber-500/10 text-amber-200",
+  Low: "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
 };
 
 export function DailyBrief() {
+  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
+
+  const briefItems = useMemo(
+    () => initialBriefItems.filter((item) => !dismissedIds.includes(item.id)),
+    [dismissedIds]
+  );
+
   return (
-    <section className="glass rounded-[28px] p-6 border border-white/5">
-      <div className="flex items-center justify-between pb-6 border-b border-white/5 mb-6">
+    <section className="glass rounded-[28px] p-6">
       <div className="mb-5 flex items-center justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-white/45">
@@ -62,31 +72,48 @@ export function DailyBrief() {
         </div>
       </div>
 
-      <div className="grid gap-4">
-        {briefItems.map((item) => (
-          <article
-            key={item.id}
-            className="glass-soft rounded-[22px] p-5 transition hover:bg-white/[0.07]"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-semibold tracking-[-0.03em] text-white">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-cyan-200/80">{item.meta}</p>
+      {briefItems.length === 0 ? (
+        <div className="glass-soft rounded-[22px] p-6 text-sm text-white/65">
+          You cleared the current brief. Nothing urgent is left for now.
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {briefItems.map((item) => (
+            <article
+              key={item.id}
+              className="glass-soft rounded-[22px] p-5 transition hover:bg-white/[0.07]"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold tracking-[-0.03em] text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-cyan-200/80">{item.meta}</p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${priorityClasses[item.priority]}`}
+                  >
+                    {item.priority}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setDismissedIds((current) => [...current, item.id])
+                    }
+                    className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/60 transition hover:border-white/20 hover:text-white"
+                  >
+                    Dismiss
+                  </button>
+                </div>
               </div>
 
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-medium ${priorityClasses[item.priority]}`}
-              >
-                {item.priority}
-              </span>
-            </div>
-
-            <p className="mt-4 text-sm leading-7 text-white/68">{item.body}</p>
-          </article>
-        ))}
-      </div>
+              <p className="mt-4 text-sm leading-7 text-white/68">{item.body}</p>
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -1,84 +1,98 @@
-import { FC, useState } from 'react';
-import { EmailMessage } from '@/lib/types/email';
-import { MOCK_EMAILS } from '@/lib/mock-emails';
+"use client";
 
-export const AIReplyAssist: FC = () => {
-  const [selectedEmail, setSelectedEmail] = useState<EmailMessage | null>(null);
-  const [reply, setReply] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+import { useState } from "react";
 
-  const handleGenerateReply = async () => {
-    if (!selectedEmail) return;
-    
-    try {
-      setIsGenerating(true);
-      setError(null);
-      
-      // Simulate async API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      setReply(`Hi ${selectedEmail.from.split('@')[0]},\n\nThank you for your message. I'll look into this and get back to you soon.\n\nBest regards,\n[Your Name]`);
-    } catch (err) {
-      setError('Failed to generate reply. Please try again.');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+type ReplySuggestion = {
+  id: string;
+  thread: string;
+  context: string;
+  draft: string;
+};
+
+const suggestions: ReplySuggestion[] = [
+  {
+    id: "1",
+    thread: "Client contract approval",
+    context: "Client is waiting on confirmation to move forward.",
+    draft:
+      "Thanks for sending this over. I reviewed it and I’m good to move forward. Please send the next steps and I’ll take a look today.",
+  },
+  {
+    id: "2",
+    thread: "Recruiter follow-up",
+    context: "Recruiter resurfaced an opportunity and is awaiting response.",
+    draft:
+      "Thanks for following up. I’m interested and would be happy to learn more. Please send over the details and a few times that could work this week.",
+  },
+  {
+    id: "3",
+    thread: "Invoice reminder",
+    context: "Payment-related email needs acknowledgment.",
+    draft:
+      "Thanks for the reminder. I’ve seen this and I’m reviewing it now. I’ll follow up shortly with confirmation and next steps.",
+  },
+];
+
+export function AIReplyAssist() {
+  const [activeId, setActiveId] = useState<string>(suggestions[0].id);
+
+  const active =
+    suggestions.find((item) => item.id === activeId) ?? suggestions[0];
 
   return (
     <section className="glass rounded-[28px] p-6">
-      <h2 className="text-[22px] font-bold tracking-tight mb-5">
-        AI Reply Assist
-      </h2>
+      <div className="mb-5">
+        <p className="text-xs uppercase tracking-[0.18em] text-white/45">
+          AI reply assist
+        </p>
+        <h2 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
+          Draft faster with context
+        </h2>
+      </div>
 
-      <div className="space-y-4">
-        <select
-          className="glass-soft w-full p-3 rounded-[18px] text-[15px]"
-          onChange={(e) => setSelectedEmail(MOCK_EMAILS.find(email => email.id === e.target.value) || null)}
-        >
-          <option value="">Select an email to reply to</option>
-          {MOCK_EMAILS.map(email => (
-            <option key={email.id} value={email.id}>
-              {email.subject} - {email.from}
-            </option>
-          ))}
-        </select>
-
-        {selectedEmail && (
-          <div className="glass-soft rounded-[18px] p-4">
-            <div className="text-[15px] mb-2">{selectedEmail.body}</div>
+      <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid gap-3">
+          {suggestions.map((item) => (
             <button
-              onClick={handleGenerateReply}
-              className="primary-btn w-full"
-              disabled={isGenerating}
+              key={item.id}
+              type="button"
+              onClick={() => setActiveId(item.id)}
+              className={`glass-soft rounded-[20px] p-4 text-left transition ${
+                item.id === active.id
+                  ? "border border-cyan-400/30 bg-cyan-500/10"
+                  : ""
+              }`}
             >
-              {isGenerating ? 'Generating...' : 'Generate Reply'}
-            </button>
-            {error && (
-              <div className="text-red-400 text-[13px] mt-2">
-                {error}
+              <div className="text-sm font-semibold text-white">
+                {item.thread}
               </div>
-            )}
-          </div>
-        )}
+              <div className="mt-2 text-sm leading-6 text-white/60">
+                {item.context}
+              </div>
+            </button>
+          ))}
+        </div>
 
-        {reply && (
-          <div className="glass-soft rounded-[18px] p-4">
-            <textarea
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              className="w-full bg-transparent text-[15px] min-h-[120px]"
-            />
-            <button
-              className="secondary-btn w-full mt-3"
-              onClick={() => navigator.clipboard.writeText(reply)}
-            >
-              Copy to Clipboard
+        <div className="glass-soft rounded-[22px] p-5">
+          <div className="text-sm text-cyan-200">{active.thread}</div>
+          <p className="mt-3 text-sm leading-7 text-white/65">
+            {active.context}
+          </p>
+
+          <div className="mt-5 rounded-[18px] border border-white/10 bg-black/20 p-4">
+            <p className="text-sm leading-7 text-white/80">{active.draft}</p>
+          </div>
+
+          <div className="mt-4 flex gap-3">
+            <button type="button" className="primary-btn">
+              Use draft
+            </button>
+            <button type="button" className="secondary-btn">
+              Regenerate
             </button>
           </div>
-        )}
+        </div>
       </div>
     </section>
   );
-};
+}

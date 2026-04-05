@@ -1,54 +1,75 @@
-import { FC } from 'react';
-import { ExtractedAction } from '@/lib/types/email';
-import { extractActions } from '@/lib/extraction/actions';
-import { MOCK_EMAILS } from '@/lib/mock-emails';
+type ActionItem = {
+  id: string;
+  title: string;
+  meta: string;
+  status: "High" | "Medium" | "Low";
+};
 
-export const ActionItems: FC = () => {
-  // Process emails to extract actions
-  const actions: ExtractedAction[] = MOCK_EMAILS.flatMap(email => 
-    extractActions(email)
-  ).sort((a, b) => b.priority - a.priority);
+const actionItems: ActionItem[] = [
+  {
+    id: "1",
+    title: "Reply to client contract thread",
+    meta: "Approval needed today",
+    status: "High",
+  },
+  {
+    id: "2",
+    title: "Send invoice follow-up",
+    meta: "Payment conversation is waiting on response",
+    status: "High",
+  },
+  {
+    id: "3",
+    title: "Confirm Thursday meeting",
+    meta: "Calendar suggestion detected in email",
+    status: "Medium",
+  },
+  {
+    id: "4",
+    title: "Review recruiter message",
+    meta: "Opportunity thread resurfaced",
+    status: "Low",
+  },
+];
 
-  const getPriorityLabel = (priority: number) => {
-    if (priority > 0.8) return 'Critical';
-    if (priority > 0.6) return 'High';
-    if (priority > 0.4) return 'Medium';
-    return 'Low';
-  };
+const badgeClasses: Record<ActionItem["status"], string> = {
+  High: "border border-red-400/20 bg-red-500/10 text-red-200",
+  Medium: "border border-amber-400/20 bg-amber-500/10 text-amber-200",
+  Low: "border border-emerald-400/20 bg-emerald-500/10 text-emerald-200",
+};
 
+export function ActionItems() {
   return (
     <section className="glass rounded-[28px] p-6">
-      <h2 className="text-[22px] font-bold tracking-tight mb-5">
-        Action Items
-      </h2>
+      <div className="mb-5">
+        <p className="text-xs uppercase tracking-[0.18em] text-white/45">
+          Action items
+        </p>
+        <h2 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
+          What needs action
+        </h2>
+      </div>
 
-      <div className="grid gap-3.5">
-        {items.map((item) => (
-          <div
-            key={item.title}
-            className="glass-soft rounded-[22px] p-4.5"
-          >
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="m-0 text-[17px] leading-[1.2] tracking-tight">
-                {item.text}
-              </h3>
-              <span className={`text-[12px] uppercase tracking-wider ${
-                item.priority > 0.8 ? 'text-red-400' : 
-                item.priority > 0.6 ? 'text-gold' : 'text-blue-2'
-              }`}>
-                {getPriorityLabel(item.priority)}
+      <div className="grid gap-4">
+        {actionItems.map((item) => (
+          <article key={item.id} className="glass-soft rounded-[22px] p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-7 text-white/65">
+                  {item.meta}
+                </p>
+              </div>
+
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-medium ${badgeClasses[item.status]}`}
+              >
+                {item.status}
               </span>
             </div>
-            <div className="mt-2 text-blue-2 text-[13px]">
-              {item.owner ? `Assigned to ${item.owner} • ` : ''}
-              {item.status}
-            </div>
-            <p className="mt-2.5 text-muted text-[14px] leading-[1.7]">
-              From: {MOCK_EMAILS.find(e => e.id === item.messageId)?.from}
-            </p>
-          </div>
+          </article>
         ))}
       </div>
     </section>
   );
-};
+}

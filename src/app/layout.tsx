@@ -1,26 +1,26 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import { ProviderProvider } from '@/contexts/ProviderContext';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
-  title: 'EmailSimple - Inbox Intelligence',
-  description: 'Simplify your inbox with AI-powered briefs and action items.',
+  title: "EmailSimple",
+  description:
+    "EmailSimple turns email overload into priorities, deadlines, actions, and follow-ups.",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ProviderProvider>
-          {children}
-        </ProviderProvider>
-      </body>
+    <html lang="en" className={inter.variable}>
+      <body>{children}</body>
     </html>
   );
 }

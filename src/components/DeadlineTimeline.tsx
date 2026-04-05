@@ -1,63 +1,67 @@
-import { FC } from 'react';
-import { ExtractedDeadline } from '@/lib/types/email';
-import { extractDeadlines } from '@/lib/extraction/deadlines';
-import { MOCK_EMAILS } from '@/lib/mock-emails';
+type DeadlineItem = {
+  id: string;
+  title: string;
+  due: string;
+  urgency: "Today" | "Tomorrow" | "This week";
+};
 
-export const DeadlineTimeline: FC = () => {
-  const deadlines = MOCK_EMAILS.flatMap(email => extractDeadlines(email))
-    .sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime());
+const deadlines: DeadlineItem[] = [
+  {
+    id: "1",
+    title: "Send contract revisions",
+    due: "Today · 4:00 PM",
+    urgency: "Today",
+  },
+  {
+    id: "2",
+    title: "Review pricing deck",
+    due: "Tomorrow · 10:00 AM",
+    urgency: "Tomorrow",
+  },
+  {
+    id: "3",
+    title: "Confirm Thursday meeting",
+    due: "This week · Thursday",
+    urgency: "This week",
+  },
+];
 
-  const groupDeadlines = (deadlines: ExtractedDeadline[]) => {
-    const now = new Date();
-    return {
-      overdue: deadlines.filter(d => d.dueDate < now),
-      today: deadlines.filter(d => 
-        d.dueDate.getDate() === now.getDate() &&
-        d.dueDate.getMonth() === now.getMonth() &&
-        d.dueDate.getFullYear() === now.getFullYear()
-      ),
-      upcoming: deadlines.filter(d => d.dueDate > now && d.dueDate.getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000),
-      later: deadlines.filter(d => d.dueDate.getTime() - now.getTime() >= 7 * 24 * 60 * 60 * 1000)
-    };
-  };
+const urgencyClasses: Record<DeadlineItem["urgency"], string> = {
+  Today: "border border-red-400/20 bg-red-500/10 text-red-200",
+  Tomorrow: "border border-amber-400/20 bg-amber-500/10 text-amber-200",
+  "This week": "border border-cyan-400/20 bg-cyan-500/10 text-cyan-200",
+};
 
-  const grouped = groupDeadlines(deadlines);
-
+export function DeadlineTimeline() {
   return (
     <section className="glass rounded-[28px] p-6">
-      <h2 className="text-[22px] font-bold tracking-tight mb-5">
-        Deadline Timeline
-      </h2>
+      <div className="mb-5">
+        <p className="text-xs uppercase tracking-[0.18em] text-white/45">
+          Deadline timeline
+        </p>
+        <h2 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
+          Upcoming deadlines
+        </h2>
+      </div>
 
-      <div className="space-y-4">
-        {Object.entries(grouped).map(([group, items]) => (
-          items.length > 0 && (
-            <div key={group}>
-              <div className="text-blue-2 text-[13px] font-medium mb-2 capitalize">
-                {group.replace(/([A-Z])/g, ' $1').trim()} ({items.length})
+      <div className="grid gap-4">
+        {deadlines.map((item) => (
+          <article key={item.id} className="glass-soft rounded-[22px] p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-7 text-white/65">{item.due}</p>
               </div>
-              <div className="space-y-2">
-                {items.map(deadline => {
-                  const email = MOCK_EMAILS.find(e => e.id === deadline.messageId);
-                  return (
-                    <div key={deadline.id} className="glass-soft rounded-[18px] p-3.5">
-                      <div className="flex items-center justify-between">
-                        <div className="text-[15px]">{deadline.text}</div>
-                        <div className="text-muted text-[13px]">
-                          {deadline.dueDate.toLocaleDateString()}
-                        </div>
-                      </div>
-                      <div className="text-muted text-[13px] mt-1">
-                        From: {email?.from}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-medium ${urgencyClasses[item.urgency]}`}
+              >
+                {item.urgency}
+              </span>
             </div>
-          )
+          </article>
         ))}
       </div>
     </section>
   );
-};
+}
