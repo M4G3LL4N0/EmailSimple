@@ -70,8 +70,16 @@ export function DailyBrief() {
           </p>
         </div>
 
-        <div className="glass-soft rounded-[16px] px-4 py-2 text-sm text-white/75">
-          {briefItems.length} critical items
+        <div className="flex items-center gap-4">
+          <div className="glass-soft rounded-[16px] px-4 py-2 text-sm">
+            <span className="text-white/75">Total:</span> {initialBriefItems.length}
+          </div>
+          <div className="glass-soft rounded-[16px] px-4 py-2 text-sm">
+            <span className="text-white/75">Remaining:</span> {briefItems.length}
+          </div>
+          <div className="glass-soft rounded-[16px] px-4 py-2 text-sm">
+            <span className="text-white/75">Completed:</span> {dismissedIds.length}
+          </div>
         </div>
       </div>
 

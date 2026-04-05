@@ -166,14 +166,22 @@ export function PriorityView() {
               </div>
 
               <div className="flex flex-col items-end gap-2">
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${priorityClasses[item.priority]}`}
-                >
-                  {item.priority}
-                </span>
-                <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
-                  Score {item.score}
-                </span>
+                <div className="flex flex-col items-end gap-2">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-medium ${priorityClasses[item.priority]}`}
+                  >
+                    {item.priority}
+                  </span>
+                  <div className="relative w-20 h-2 bg-white/10 rounded-full">
+                    <div 
+                      className="absolute inset-y-0 left-0 bg-cyan-500 rounded-full"
+                      style={{ width: `${item.score}%` }}
+                    />
+                  </div>
+                  <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
+                    Score {item.score}
+                  </span>
+                </div>
               </div>
             </div>
           </article>

@@ -26,8 +26,19 @@ export function ActionCenter() {
 
       <div className="mt-5 grid gap-3">
         {actions.map((action) => (
-          <div key={action} className="glass-soft rounded-[18px] p-4 text-white/80">
-            {action}
+          <div key={action.text} className="glass-soft rounded-[18px] p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">{action.text}</h3>
+                <p className="mt-1 text-sm text-white/60">{action.context}</p>
+              </div>
+              <button
+                type="button"
+                className="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-white/80 hover:bg-white/5 transition-colors"
+              >
+                {action.action}
+              </button>
+            </div>
           </div>
         ))}
       </div>
