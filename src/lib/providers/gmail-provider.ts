@@ -35,13 +35,38 @@ export class GmailProvider implements EmailProvider {
     // - Google reduced default token lifespan to 24 hours (from 7 days)
     // - New security policies require more frequent re-auth for sensitive scopes
     // - Users increasingly expect 'set and forget' integrations
-    // Design: Would call Google's token endpoint to refresh
-    // Would update this.accessToken and this.refreshToken
-    throw new Error(
-      'We couldn\'t refresh your Gmail connection. ' +
-      'This usually happens when your session expires. ' +
-      'Please reconnect your Gmail account in Settings.'
-    );
+    
+    try {
+      const response = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          client_id: process.env.GOOGLE_CLIENT_ID!,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+          grant_type: 'refresh_token',
+          refresh_token: this.refreshToken!
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Token refresh failed: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      this.accessToken = data.access_token;
+      // Refresh token may or may not be returned - keep existing if not provided
+      if (data.refresh_token) {
+        this.refreshToken = data.refresh_token;
+      }
+    } catch (error) {
+      throw new Error(
+        'We couldn\'t refresh your Gmail connection. ' +
+        'This usually happens when your session expires. ' +
+        'Please reconnect your Gmail account in Settings.'
+      );
+    }
   }
   
   async listThreads(options?: ThreadListOptions): Promise<ThreadSummary[]> {
