@@ -63,13 +63,6 @@ export interface ReplySuggestion {
   confidence: number;
 }
 
-export interface Priority {
-  id: string;
-  level: 'critical' | 'high' | 'medium';
-  reason: string;
-  urgency: 'high' | 'medium' | 'low';
-}
-
 export interface Attachment {
   id: string;
   filename: string;
@@ -140,6 +133,11 @@ export interface AccountSummary {
   lastSync: Date;
 }
 
+export interface DailyBrief {
+  id: string;
+  summary: string;
+}
+
 export type EmailPipelineOutput = {
   priorities: Priority[];
   deadlines: Deadline[];
@@ -153,15 +151,21 @@ export async function processInboxData(data: any): Promise<EmailPipelineOutput> 
   // Mock pipeline processing
   const priorities = data.threads.map(thread => ({
     id: thread.id,
-    priority: thread.priority,
+    priorityLevel: thread.priority as 'high' | 'medium' | 'low',
     reason: thread.subject,
-    urgency: thread.deadlines.length > 0 ? 'high' : 'medium'
+    urgency: thread.deadlines?.length > 0 ? 'high' : 'medium'
   }));
   
   const deadlines = data.threads.map(thread => {
-    const deadline = data.threads.find(t => t.id === thread.id)?.deadlines;
-    return deadline ? { id: deadline.id, dueDate: deadline.date, status: deadline.status } : null;
-  });
+    if (thread.deadlines) {
+      return {
+        id: thread.deadlines.id,
+        dueDate: thread.deadlines.date,
+        status: thread.deadlines.status
+      };
+    }
+    return null;
+  }).filter(Boolean);
   
   const actions = data.threads.map(thread => ({
     id: thread.id,
@@ -182,30 +186,30 @@ export async function processInboxData(data: any): Promise<EmailPipelineOutput> 
     summary: thread.messages.filter(msg => msg.unread).map(msg => `${msg.subject} - ${msg.date.toLocaleDateString()}`).join(' | ')
   }));
   
-  const replySuggestions = data.threads.map(thread => {
-    const suggestions = data.threads.filter(msg => msg.unread).map(msg => {
-      const text = msg.content;
-      if (msg.priority === 'high') {
-        return {
-          id: msg.id,
-          text: text,
-          suggestedBy: 'AI',
-          confidence: 0.9,
-          confidenceLevel: 'high'
-        };
-      }
-      if (msg.priority === 'medium') {
-        return {
-          id: msg.id,
-          text: `${msg.subject} - ${msg.date.toLocaleDateString()}`,
-          suggestedBy: 'AI',
-          confidence: 0.7,
-          confidenceLevel: 'medium'
-        };
-      }
-      return null;
-    });
-    return suggestions;
+  const replySuggestions = data.threads.flatMap(thread => {
+    return data.threads
+      .filter(msg => msg.unread)
+      .map(msg => {
+        const text = msg.content;
+        if (msg.priority === 'high') {
+          return {
+            id: msg.id,
+            text: text,
+            suggestedBy: 'AI',
+            confidence: 0.9
+          };
+        }
+        if (msg.priority === 'medium') {
+          return {
+            id: msg.id,
+            text: `${msg.subject} - ${msg.date.toLocaleDateString()}`,
+            suggestedBy: 'AI',
+            confidence: 0.7
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
   });
   
   return {
