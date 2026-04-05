@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,14 +16,23 @@ export const metadata: Metadata = {
     "EmailSimple turns email overload into priorities, deadlines, actions, and follow-ups.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const supabase = createClient();
+  
+  const { data: { session } } = await supabase.auth.getSession();
+
   return (
     <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+      <body>
+        <AuthProvider session={session}>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }
