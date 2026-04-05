@@ -29,38 +29,36 @@ export class GmailProvider implements EmailProvider {
   }
   
   async refreshToken(): Promise<void> {
-    // Validate we have required tokens locally first
-    if (!this.refreshToken) {
-      throw new Error(
-        'Missing refresh token. Please reconnect your Gmail account.'
-      );
+    // Validate tokens exist and meet basic security requirements
+    if (!this.refreshToken?.trim()) {
+      throw new Error('Authentication required - please reconnect your Gmail account');
+    }
+    
+    if (this.refreshToken.length < 64 || !/^[a-zA-Z0-9._-]+$/.test(this.refreshToken)) {
+      throw new Error('Potential security issue detected - please re-authenticate');
     }
 
-    // Validate token length and format locally
-    if (this.refreshToken.length < 30 || !this.refreshToken.includes('.')) {
-      throw new Error(
-        'Invalid refresh token format. Please reconnect your Gmail account.'
-      );
-    }
-
-    // Only proceed if all local checks pass
+    // Securely prepare refresh request
     try {
-      const payload = new URLSearchParams();
-      payload.set('client_id', process.env.GOOGLE_CLIENT_ID || '');
-      payload.set('client_secret', process.env.GOOGLE_CLIENT_SECRET || '');
-      payload.set('grant_type', 'refresh_token');
-      payload.set('refresh_token', this.refreshToken);
+      const encodedParams = new URLSearchParams({
+        client_id: encodeURIComponent(process.env.GOOGLE_CLIENT_ID || ''),
+        client_secret: encodeURIComponent(process.env.GOOGLE_CLIENT_SECRET || ''),
+        grant_type: 'refresh_token',
+        refresh_token: encodeURIComponent(this.refreshToken)
+      });
 
       const response = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
         },
-        body: payload
+        body: encodedParams
       });
 
       if (!response.ok) {
-        throw new Error(`Token refresh failed: ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(errorData.error_description || 'Refresh token rejected by Google');
       }
 
       const data = await response.json();
