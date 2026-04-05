@@ -1,17 +1,21 @@
 export interface FollowUpSignal {
   id: string;
-  /** Thread subject */
   title: string;
-  /** Why follow-up is needed */
   detail: string;
-  /** How stale the thread is */
-  age: string;
-  /** Risk level */
-  risk: "High" | "Medium" | "Low";
-  /** Actual last message timestamp */
   lastMessageAt: Date;
-  /** Related email thread ID */
   threadId: string;
-  /** Last action taken */
   lastAction?: string;
+  
+  // New fields
+  priority: PriorityLevel;
+  confidence: number;
+  risk: "critical" | "high" | "medium" | "low";
+  daysStale: number;
+  followUpCount: number;
+  relationshipValue: number;
+  opportunityCost: number;
+  suggestedResponseTime: number; // in hours
+  suggestedNextStep: string;
+  relatedThreads?: string[];
+  lastUpdatedAt: Date;
 }

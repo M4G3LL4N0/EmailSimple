@@ -17,18 +17,13 @@ export interface PipelineOutput {
 }
 
 export async function runEmailPipeline(provider: EmailProvider): Promise<PipelineOutput> {
-  // 1. Get latest threads from provider
+  // 1. Get latest threads and normalize
   const syncState = await provider.getSyncState();
-  const threadSummaries = await provider.getThreadsSince(syncState.lastSyncAt || new Date(0));
-  
-  // 2. Get full thread details and normalize
-  const threads = await Promise.all(
-    threadSummaries.map(summary => 
-      provider.getThread(summary.providerThreadId)
-    )
+  const threads = await normalizeThreads(
+    await provider.getThreadsSince(syncState.lastSyncAt || new Date(0))
   );
 
-  // 3. Extract key information
+  // 2. Extract and cross-link all intelligence
   const [priorities, deadlines, actions, followUps] = await Promise.all([
     extractPriorities(threads),
     extractDeadlines(threads),
@@ -36,24 +31,74 @@ export async function runEmailPipeline(provider: EmailProvider): Promise<Pipelin
     extractFollowUps(threads),
   ]);
 
-  // 4. Generate daily brief
+  // 3. Generate enriched outputs
   const dailyBrief = generateDailyBrief({
     actions,
-    deadlines, 
+    deadlines,
     followUps,
-    priorities
+    priorities,
+    threads
   });
 
-  // 5. Generate reply suggestions
-  const replySuggestions = generateReplySuggestions(threads);
-
-  return {
-    priorities,
-    deadlines,
+  const replySuggestions = generateReplySuggestions({
+    threads,
     actions,
-    followUps,
+    deadlines,
+    followUps
+  });
+
+  // 4. Cross-link related items
+  const enrichedOutput = {
+    priorities: linkRelatedItems(priorities, {actions, deadlines, followUps}),
+    deadlines: linkRelatedItems(deadlines, {actions, priorities, followUps}),
+    actions: linkRelatedItems(actions, {deadlines, priorities, followUps}),
+    followUps: linkRelatedItems(followUps, {actions, deadlines, priorities}),
     dailyBrief,
     replySuggestions
+  };
+
+  // 5. Apply business rules and final scoring
+  return applyBusinessRules(enrichedOutput);
+}
+
+async function normalizeThreads(threads: EmailThread[]): Promise<NormalizedThread[]> {
+  // Implementation would normalize sender, participants, dates, etc.
+  return threads.map(thread => ({
+    ...thread,
+    normalizedAt: new Date(),
+    normalizationVersion: '1.0'
+  }));
+}
+
+function linkRelatedItems<T extends {threadId: string}>(items: T[], others: {
+  actions: ExtractedAction[];
+  deadlines: ExtractedDeadline[];
+  followUps: FollowUpSignal[];
+  priorities: PriorityScore[];
+}): T[] {
+  return items.map(item => ({
+    ...item,
+    relatedItems: {
+      actions: others.actions.filter(a => a.threadId === item.threadId),
+      deadlines: others.deadlines.filter(d => d.threadId === item.threadId),
+      followUps: others.followUps.filter(f => f.threadId === item.threadId),
+      priorities: others.priorities.filter(p => p.threadId === item.threadId)
+    }
+  }));
+}
+
+function applyBusinessRules(output: PipelineOutput): PipelineOutput {
+  // Implementation would apply business-specific scoring rules
+  return {
+    ...output,
+    priorities: output.priorities.map(p => ({
+      ...p,
+      score: calculateFinalPriorityScore(p)
+    })),
+    dailyBrief: {
+      ...output.dailyBrief,
+      stats: calculateBriefStats(output)
+    }
   };
 }
 

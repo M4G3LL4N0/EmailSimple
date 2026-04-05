@@ -1,15 +1,24 @@
 export interface ExtractedDeadline {
   id: string;
-  /** Deadline description */
   title: string;
-  /** Formatted due datetime */
-  due: string;
-  /** Relative urgency */
-  urgency: "Today" | "Tomorrow" | "This week";
-  /** Absolute due date */
   dueAt: Date;
-  /** Related email thread ID */
   threadId: string;
-  /** Completion flag */
   isDone: boolean;
+  
+  // New fields
+  priority: PriorityLevel;
+  confidence: number;
+  deadlineType: "contract" | "payment" | "meeting" | "deliverable" | "approval";
+  stakeholders: {
+    name: string;
+    role: string;
+    isBlocking: boolean;
+  }[];
+  consequences: string[];
+  requiredPreparation?: string[];
+  bufferTime: number; // in hours
+  isRecurring: boolean;
+  recurrencePattern?: string;
+  suggestedNextStep: string;
+  lastUpdatedAt: Date;
 }

@@ -1,16 +1,25 @@
 export interface ExtractedAction {
-  /** Unique ID for tracking */
   id: string;
-  /** Action text "Send contract revisions" */
   title: string;
-  /** Context/instructions for action */
   detail: string;
-  /** Status determines UI treatment */
-  status: "Due now" | "Pending" | "Draft reply";
-  /** Related email thread ID */
+  status: "critical" | "due" | "pending" | "draft" | "completed";
   threadId: string;
-  /** Original detection timestamp */
   detectedAt: Date;
-  /** When action was completed */
   completedAt?: Date;
+  
+  // New fields
+  priority: PriorityLevel;
+  confidence: number;
+  stakeholders: {
+    name: string;
+    role: string;
+    isBlocking: boolean;
+  }[];
+  estimatedTime: number; // in minutes
+  requiredResources?: string[];
+  relatedActions?: string[];
+  opportunityValue?: number;
+  riskOfDelay?: number;
+  suggestedNextStep: string;
+  lastUpdatedAt: Date;
 }
