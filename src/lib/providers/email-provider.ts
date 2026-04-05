@@ -5,37 +5,43 @@ export interface EmailProvider {
   refreshToken(): Promise<void>;
   validateCredentials(): Promise<boolean>;
   
-  // Batch sync operations
+  // Sync operations
   getDeltaSync(options: DeltaSyncOptions): Promise<DeltaSyncResult>;
   getFullSync(options: FullSyncOptions): Promise<FullSyncResult>;
   
-  // Individual operations
+  // Thread operations
   getThread(threadId: string): Promise<NormalizedThread>;
   getThreads(filter: ThreadFilter): Promise<ThreadSummary[]>;
-  
-  // Message operations
-  getMessage(messageId: string): Promise<NormalizedMessage>;
-  
-  // Batch operations
   batchGetThreads(threadIds: string[]): Promise<NormalizedThread[]>;
+  
+  // Message operations  
+  getMessage(messageId: string): Promise<NormalizedMessage>;
   batchGetMessages(messageIds: string[]): Promise<NormalizedMessage[]>;
   
-  // Sync state management
+  // Sync state
   getSyncState(): Promise<SyncState>;
   updateSyncState(state: Partial<SyncState>): Promise<void>;
   
-  // Webhook support for real-time updates
+  // Webhooks
   setupWebhook?(config: WebhookConfig): Promise<WebhookInfo>;
   verifyWebhook?(payload: unknown): Promise<boolean>;
   
-  // Provider metadata
-  readonly provider: 'gmail' | 'outlook' | 'imap';
-  readonly accountId: string;
-  
-  // Normalization utilities
+  // Normalization
   normalizeThread(raw: any): NormalizedThread;
   normalizeMessage(raw: any): NormalizedMessage;
   normalizeParticipant(raw: any): EmailParticipant;
+  normalizeLabels(raw: any): string[];
+  normalizeAttachments(raw: any): Attachment[];
+  
+  // Metadata
+  readonly provider: 'gmail' | 'outlook' | 'imap';
+  readonly accountId: string;
+  readonly capabilities: {
+    deltaSync: boolean;
+    fullSync: boolean;
+    webhooks: boolean;
+    batchOperations: boolean;
+  };
 }
 
 export interface AuthResult {

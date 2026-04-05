@@ -16,12 +16,17 @@ export interface PipelineOutput {
   replySuggestions: ReplySuggestions;
 }
 
-export async function runEmailPipeline(): Promise<PipelineOutput> {
-  // 1. Generate mock emails (will be replaced with real emails later)
-  const emails = await generateMockEmails();
-
-  // 2. Process into threads
-  const threads = organizeIntoThreads(emails);
+export async function runEmailPipeline(provider: EmailProvider): Promise<PipelineOutput> {
+  // 1. Get latest threads from provider
+  const syncState = await provider.getSyncState();
+  const threadSummaries = await provider.getThreadsSince(syncState.lastSyncAt || new Date(0));
+  
+  // 2. Get full thread details and normalize
+  const threads = await Promise.all(
+    threadSummaries.map(summary => 
+      provider.getThread(summary.providerThreadId)
+    )
+  );
 
   // 3. Extract key information
   const [priorities, deadlines, actions, followUps] = await Promise.all([

@@ -87,7 +87,26 @@ export class SyncService {
     }
   }
   
-  private async upsertThread(accountId: string, thread: any) {
+  private async upsertThread(accountId: string, thread: NormalizedThread) {
+    // First normalize the thread data
+    const normalizedThread = {
+      ...thread,
+      labels: thread.labels.map(label => ({
+        name: label,
+        normalizedAt: new Date().toISOString()
+      })),
+      participants: thread.participants.map(participant => ({
+        ...participant,
+        normalizedAt: new Date().toISOString(),
+        normalizationVersion: '1.0'
+      })),
+      messages: thread.messages.map(message => ({
+        ...message,
+        normalizedAt: new Date().toISOString(),
+        normalizationVersion: '1.0'
+      }))
+    };
+
     // Upsert thread and its messages/participants in a transaction
     const { data: threadData, error: threadError } = await this.supabase
       .from('threads')
@@ -98,9 +117,11 @@ export class SyncService {
         subject: thread.subject,
         last_activity: thread.lastActivity.toISOString(),
         unread: thread.unread,
-        labels: thread.labels,
+        labels: normalizedThread.labels,
         sync_status: thread.syncStatus,
-        synced_at: thread.syncedAt?.toISOString()
+        synced_at: thread.syncedAt?.toISOString(),
+        normalized_at: new Date().toISOString(),
+        normalization_version: '1.0'
       }, {
         onConflict: 'account_id, provider_thread_id'
       })

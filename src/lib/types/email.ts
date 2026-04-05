@@ -11,7 +11,13 @@ export interface EmailParticipant {
     isMe?: boolean;
     isDomainVerified?: boolean;
     isEmailVerified?: boolean;
+    providerSpecific?: Record<string, unknown>; // Raw provider data
   };
+}
+
+export interface NormalizedParticipant extends EmailParticipant {
+  normalizedAt: Date;
+  normalizationVersion: string;
 }
 
 export interface EmailAttachment {
