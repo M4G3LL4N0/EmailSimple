@@ -206,6 +206,33 @@ export class SyncService {
   
   private async completeSync(jobId: string, accountId: string) {
     const now = new Date().toISOString();
+    
+    // Calculate intelligence metrics
+    const { data: threads } = await this.supabase
+      .from('threads')
+      .select('meta->intelligence')
+      .eq('account_id', accountId);
+    
+    const intelligenceMetrics = threads?.reduce((acc, thread) => {
+      if (thread.meta?.intelligence) {
+        acc.priorityConfidence += thread.meta.intelligence.priorityConfidence || 0;
+        acc.actionItemConfidence += thread.meta.intelligence.actionItemConfidence || 0;
+        acc.followupConfidence += thread.meta.intelligence.followupConfidence || 0;
+        acc.count++;
+      }
+      return acc;
+    }, { priorityConfidence: 0, actionItemConfidence: 0, followupConfidence: 0, count: 0 });
+    
+    const averagePriorityConfidence = intelligenceMetrics.count > 0 
+      ? intelligenceMetrics.priorityConfidence / intelligenceMetrics.count
+      : 0;
+    const averageActionItemConfidence = intelligenceMetrics.count > 0
+      ? intelligenceMetrics.actionItemConfidence / intelligenceMetrics.count
+      : 0;
+    const averageFollowupConfidence = intelligenceMetrics.count > 0
+      ? intelligenceMetrics.followupConfidence / intelligenceMetrics.count
+      : 0;
+    
     await Promise.all([
       this.supabase
         .from('sync_jobs')
@@ -218,7 +245,12 @@ export class SyncService {
         .from('accounts')
         .update({
           last_sync_at: now,
-          sync_status: 'idle'
+          sync_status: 'idle',
+          intelligence: {
+            priorityAccuracy: averagePriorityConfidence,
+            actionItemAccuracy: averageActionItemConfidence,
+            followupAccuracy: averageFollowupConfidence
+          }
         })
         .eq('id', accountId)
     ]);

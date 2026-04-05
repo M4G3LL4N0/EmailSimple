@@ -90,5 +90,22 @@ export interface EmailThread {
     hasDeadlines: boolean;
     /** Whether thread requires follow-up */
     requiresFollowUp: boolean;
+    /** Intelligence metrics */
+    intelligence: {
+      /** Confidence score for priority (0-100) */
+      priorityConfidence: number;
+      /** Confidence score for action items (0-100) */
+      actionItemConfidence: number;
+      /** Confidence score for follow-up (0-100) */
+      followupConfidence: number;
+      /** Predicted response time (in hours) */
+      predictedResponseTime?: number;
+      /** Predicted resolution time (in hours) */
+      predictedResolutionTime?: number;
+      /** Risk score (0-100) */
+      riskScore?: number;
+      /** Importance score (0-100) */
+      importanceScore?: number;
+    };
   };
 }

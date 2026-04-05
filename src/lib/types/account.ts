@@ -24,6 +24,19 @@ export interface EmailAccount {
     labels?: string[]; // Labels to include/exclude
     filters?: string[]; // Advanced filters
   };
+  onboarding?: {
+    completedSteps: ('connect' | 'sync' | 'priority' | 'action' | 'followup')[];
+    lastCompletedAt?: Date;
+    intelligenceScore?: number; // 0-100 based on setup completeness
+  };
+  intelligence?: {
+    priorityAccuracy?: number; // 0-100 based on user feedback
+    actionItemAccuracy?: number;
+    followupAccuracy?: number;
+    averageResponseTime?: number; // In hours
+    averageResolutionTime?: number; // In hours
+    inboxHealthScore?: number; // 0-100 based on metrics
+  };
   createdAt: Date;
   updatedAt: Date;
 }
