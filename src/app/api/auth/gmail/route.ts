@@ -7,7 +7,11 @@ export async function GET() {
   
   if (!clientId || !redirectUri) {
     return NextResponse.json(
-      { error: 'Google OAuth not configured' },
+      { 
+        error: 'Gmail connection unavailable',
+        message: 'Our system isn\'t properly configured to connect with Gmail yet. ' +
+                'Our team has been notified. Please try again later or contact support.'
+      },
       { status: 500 }
     );
   }

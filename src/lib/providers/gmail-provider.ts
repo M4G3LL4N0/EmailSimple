@@ -25,14 +25,22 @@ export class GmailProvider implements EmailProvider {
   async refreshToken(): Promise<void> {
     // Design: Would call Google's token endpoint to refresh
     // Would update this.accessToken and this.refreshToken
-    throw new Error('Token refresh not implemented - design phase');
+    throw new Error(
+      'We couldn\'t refresh your Gmail connection. ' +
+      'This usually happens when your session expires. ' +
+      'Please reconnect your Gmail account in Settings.'
+    );
   }
   
   async listThreads(options?: ThreadListOptions): Promise<ThreadSummary[]> {
     // Design: Would call Gmail API users.threads.list
     // Example: GET https://gmail.googleapis.com/gmail/v1/users/me/threads
     // Would map Gmail's thread format to ThreadSummary
-    throw new Error('listThreads not implemented - design phase');
+    throw new Error(
+      'We\'re having trouble loading your emails. ' +
+      'This feature requires Gmail read permissions. ' +
+      'Please check your account permissions and try again.'
+    );
   }
   
   async getThread(threadId: string): Promise<NormalizedThread> {
@@ -46,7 +54,11 @@ export class GmailProvider implements EmailProvider {
     // 4. Map Gmail labels to our labels array
     // 5. Determine unread status from thread's UNREAD label
     // 6. Set lastActivity from thread's lastMessageDate
-    throw new Error('getThread not implemented - design phase');
+    throw new Error(
+      'We couldn\'t load this email thread. ' +
+      'Make sure you have proper Gmail access and the thread exists. ' +
+      'If this persists, try reconnecting your account.'
+    );
   }
   
   async getThreadsSince(since: Date): Promise<ThreadSummary[]> {
