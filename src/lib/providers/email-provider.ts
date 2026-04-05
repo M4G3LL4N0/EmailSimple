@@ -12,6 +12,14 @@ export interface EmailProvider {
   // Message operations
   getMessage(messageId: string): Promise<NormalizedMessage>;
   
+  // Batch operations
+  batchGetThreads(threadIds: string[]): Promise<NormalizedThread[]>;
+  batchGetMessages(messageIds: string[]): Promise<NormalizedMessage[]>;
+  
+  // Sync state management
+  getSyncState(): Promise<SyncState>;
+  updateSyncState(state: Partial<SyncState>): Promise<void>;
+  
   // Webhook support for real-time updates
   setupWebhook?(config: WebhookConfig): Promise<WebhookInfo>;
   verifyWebhook?(payload: unknown): Promise<boolean>;
@@ -19,6 +27,11 @@ export interface EmailProvider {
   // Provider metadata
   readonly provider: 'gmail' | 'outlook' | 'imap';
   readonly accountId: string;
+  
+  // Normalization utilities
+  normalizeThread(raw: any): NormalizedThread;
+  normalizeMessage(raw: any): NormalizedMessage;
+  normalizeParticipant(raw: any): EmailParticipant;
 }
 
 export interface AuthResult {

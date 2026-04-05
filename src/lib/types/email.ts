@@ -1,10 +1,32 @@
 // Normalized email data model
 export interface EmailParticipant {
+  id: string; // Provider-specific ID if available
   address: string;
   name?: string;
   isInternal?: boolean;
-  role?: "sender" | "recipient" | "cc" | "bcc";
+  role: "sender" | "recipient" | "cc" | "bcc";
   importance?: number; // 0-100 sender importance score
+  metadata?: {
+    isPrimary?: boolean;
+    isMe?: boolean;
+    isDomainVerified?: boolean;
+    isEmailVerified?: boolean;
+  };
+}
+
+export interface EmailAttachment {
+  id: string;
+  filename: string;
+  mimeType: string;
+  size: number;
+  url?: string;
+  isInline?: boolean;
+  contentId?: string;
+}
+
+export interface EmailHeader {
+  name: string;
+  value: string;
 }
 
 export interface EmailMessage {

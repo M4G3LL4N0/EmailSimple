@@ -1,10 +1,43 @@
 // Sync orchestration service
 import { EmailProvider } from '@/lib/providers/email-provider';
-import { SyncJob, SyncError } from '@/lib/types/sync';
+import { SyncJob, SyncError, SyncState } from '@/lib/types/sync';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export class SyncService {
+  private syncStateCache = new Map<string, SyncState>();
+  
   constructor(private supabase: SupabaseClient) {}
+
+  async getSyncState(accountId: string): Promise<SyncState> {
+    if (this.syncStateCache.has(accountId)) {
+      return this.syncStateCache.get(accountId)!;
+    }
+    
+    const { data, error } = await this.supabase
+      .from('sync_state')
+      .select('*')
+      .eq('account_id', accountId)
+      .single();
+    
+    if (error) throw error;
+    
+    this.syncStateCache.set(accountId, data);
+    return data;
+  }
+
+  async updateSyncState(accountId: string, state: Partial<SyncState>) {
+    const existing = await this.getSyncState(accountId);
+    const updated = { ...existing, ...state };
+    
+    const { error } = await this.supabase
+      .from('sync_state')
+      .upsert(updated)
+      .eq('account_id', accountId);
+    
+    if (error) throw error;
+    
+    this.syncStateCache.set(accountId, updated);
+  }
   
   async startSync(accountId: string): Promise<SyncJob> {
     // Create sync job record

@@ -15,6 +15,14 @@ export interface EmailAccount {
   lastSyncAt?: Date;
   syncStatus: 'idle' | 'syncing' | 'error';
   syncError?: string;
+  syncState?: {
+    lastSyncToken?: string;
+    lastHistoryId?: string;
+    lastFullSyncAt?: Date;
+    pendingThreads: number;
+    processedThreads: number;
+    totalThreads: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
