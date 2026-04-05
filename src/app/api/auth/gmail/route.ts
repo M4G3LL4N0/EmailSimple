@@ -30,7 +30,8 @@ export async function GET() {
   
   const state = JSON.stringify({
     operational: true,
-    syncFrequency: 5 // minutes
+    syncFrequency: 5, // minutes
+    healthCheck: true // Enable health monitoring
   });
   
   const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${encodeURIComponent(state)}`;

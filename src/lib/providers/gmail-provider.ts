@@ -3,6 +3,23 @@ import { EmailProvider, AuthResult, ThreadSummary, NormalizedThread, NormalizedM
 import { EmailParticipant } from '@/lib/types/email';
 
 export class GmailProvider implements EmailProvider {
+  async getSummaryStrip() {
+    const status = await this.getSyncStatus();
+    const threads = await this.listThreads({ maxResults: 1 });
+    
+    return {
+      status: status.health,
+      lastSync: status.timestamp,
+      nextSync: status.nextSyncAt,
+      unreadCount: threads.filter(t => t.unread).length,
+      actionRequired: threads.filter(t => t.metadata.requiresAction).length,
+      recentErrors: status.stats.errors,
+      bandwidthUsed: `${Math.round(status.stats.bandwidthUsed / 1024)} KB`,
+      syncSpeed: status.stats.syncDuration > 0 
+        ? `${Math.round(status.stats.threadsProcessed / status.stats.syncDuration * 60)} threads/min` 
+        : 'Calculating...'
+    };
+  }
   private trackError(type: string, message: string) {
     this.lastSyncStatus.lastError = {
       type,
@@ -21,12 +38,20 @@ export class GmailProvider implements EmailProvider {
       syncDuration: 0,
       apiCalls: 0,
       cacheHits: 0,
-      bandwidthUsed: 0
+      bandwidthUsed: 0,
+      lastSyncDuration: 0,
+      avgSyncDuration: 0,
+      syncCount: 0
     },
     lastError: null as null | {
       type: string;
       message: string;
       timestamp: Date;
+    },
+    summary: {
+      unreadCount: 0,
+      highPriority: 0,
+      pendingActions: 0
     }
   };
 
@@ -317,9 +342,22 @@ export class GmailProvider implements EmailProvider {
         });
       });
 
+      // Update sync status
+      this.lastSyncStatus.state = 'syncing';
+      this.lastSyncStatus.timestamp = new Date();
+      
       // Return limited set of threads for real-time dashboard
       const threads = Array.from(threadIds).slice(0, 50); // Operational limit
-      return await Promise.all(threads.map(threadId => this.getThread(threadId)))
+      const result = await Promise.all(threads.map(threadId => this.getThread(threadId)));
+      
+      // Update summary metrics
+      this.lastSyncStatus.summary = {
+        unreadCount: result.filter(t => t.unread).length,
+        highPriority: result.filter(t => t.decisionContext.urgencyScore > 0.7).length,
+        pendingActions: result.filter(t => t.decisionContext.actionRequired).length
+      };
+      
+      return result;
         .then(threads => threads.map(thread => ({
           id: thread.id,
           providerThreadId: thread.id,
