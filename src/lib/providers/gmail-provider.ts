@@ -3,6 +3,49 @@ import { EmailProvider, AuthResult, ThreadSummary, NormalizedThread, NormalizedM
 import { EmailParticipant } from '@/lib/types/email';
 
 export class GmailProvider implements EmailProvider {
+  private classifyPriority(context: {
+    labels: string[];
+    hasDeadlineKeywords: boolean;
+    actionRequired: boolean;
+    participants: string[];
+    messageCount: number;
+  }): 'critical' | 'important' | 'informational' {
+    // Critical: Directly addressed to me with deadline
+    if (context.hasDeadlineKeywords && context.participants.includes('me')) {
+      return 'critical';
+    }
+    
+    // Important: Labeled important or requires action
+    if (context.actionRequired || context.labels.includes('IMPORTANT')) {
+      return 'important';
+    }
+    
+    // Informational: Everything else
+    return 'informational';
+  }
+
+  private getClassificationReason(threadData: any): string {
+    const labels = threadData.labelIds || [];
+    const participants = threadData.messages?.flatMap((msg: any) => 
+      msg.payload?.headers?.filter((h: any) => ['From', 'To', 'Cc'].includes(h.name))
+    ) || [];
+
+    if (labels.includes('IMPORTANT')) {
+      return 'Marked as important by user';
+    }
+
+    if (participants.some((p: any) => p.value.includes('me'))) {
+      return 'Directly addressed to me';
+    }
+
+    if (threadData.messages?.some((msg: any) => 
+      msg.snippet?.toLowerCase().includes('urgent')
+    )) {
+      return 'Contains urgent language';
+    }
+
+    return 'Default classification';
+  }
   async getSummaryStrip() {
     const status = await this.getSyncStatus();
     const threads = await this.listThreads({ maxResults: 1 });
@@ -11,8 +54,10 @@ export class GmailProvider implements EmailProvider {
       status: status.health,
       lastSync: status.timestamp,
       nextSync: status.nextSyncAt,
+      criticalCount: threads.filter(t => t.decisionContext.priorityLevel === 'critical').length,
+      importantCount: threads.filter(t => t.decisionContext.priorityLevel === 'important').length,
+      informationalCount: threads.filter(t => t.decisionContext.priorityLevel === 'informational').length,
       unreadCount: threads.filter(t => t.unread).length,
-      actionRequired: threads.filter(t => t.metadata.requiresAction).length,
       recentErrors: status.stats.errors,
       bandwidthUsed: `${Math.round(status.stats.bandwidthUsed / 1024)} KB`,
       syncSpeed: status.stats.syncDuration > 0 
@@ -185,10 +230,12 @@ export class GmailProvider implements EmailProvider {
         unread: thread.labelIds?.includes('UNREAD') || false,
         // Decision UX metadata
         metadata: {
+          priorityLevel: 'informational', // Default classification
           priorityScore: 0, // Will be calculated by intelligence service
           requiresAction: thread.labelIds?.includes('IMPORTANT') || false,
           hasDeadline: false, // Will be detected from content
-          stakeholders: [] // Will be extracted from participants
+          stakeholders: [], // Will be extracted from participants
+          classificationReason: 'Default classification'
         }
       })) || [];
     } catch (error) {
@@ -280,13 +327,21 @@ export class GmailProvider implements EmailProvider {
         messages,
         labels: threadData.labelIds || [],
         unread: threadData.labelIds?.includes('UNREAD') || false,
-        // Enhanced decision metadata
+        // Enhanced decision metadata with priority classification
         decisionContext: {
           hasAttachments,
           hasDeadlineKeywords,
           urgencyScore: hasDeadlineKeywords ? 0.8 : 0.2, // Will be refined by AI
           actionRequired: threadData.labelIds?.includes('IMPORTANT') || false,
-          lastActivity: messages[messages.length - 1]?.date || new Date()
+          lastActivity: messages[messages.length - 1]?.date || new Date(),
+          priorityLevel: this.classifyPriority({
+            labels: threadData.labelIds || [],
+            hasDeadlineKeywords,
+            actionRequired: threadData.labelIds?.includes('IMPORTANT') || false,
+            participants: Array.from(participants),
+            messageCount: messages.length
+          }),
+          classificationReason: this.getClassificationReason(threadData)
         }
       };
     } catch (error) {
