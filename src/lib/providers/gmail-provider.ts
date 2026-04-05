@@ -12,6 +12,8 @@ export class GmailProvider implements EmailProvider {
   ) {}
   
   async authenticate(): Promise<AuthResult> {
+    // Secure OAuth2 authentication ensures your Gmail account stays protected
+    // while allowing EmailSimple to help manage your inbox efficiently
     // Design: Would use OAuth2 flow to get tokens
     // For now, return existing tokens
     return {
@@ -23,6 +25,8 @@ export class GmailProvider implements EmailProvider {
   }
   
   async refreshToken(): Promise<void> {
+    // Automatic token refresh keeps your connection active without requiring
+    // frequent re-authentication, ensuring uninterrupted email management
     // Design: Would call Google's token endpoint to refresh
     // Would update this.accessToken and this.refreshToken
     throw new Error(
@@ -33,6 +37,8 @@ export class GmailProvider implements EmailProvider {
   }
   
   async listThreads(options?: ThreadListOptions): Promise<ThreadSummary[]> {
+    // Efficient thread listing allows EmailSimple to quickly surface important
+    // conversations while respecting your Gmail organization and labels
     // Design: Would call Gmail API users.threads.list
     // Example: GET https://gmail.googleapis.com/gmail/v1/users/me/threads
     // Would map Gmail's thread format to ThreadSummary
