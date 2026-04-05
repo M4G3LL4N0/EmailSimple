@@ -21,11 +21,19 @@ export async function GET() {
     );
   }
   
-  const scope = encodeURIComponent(
-    'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.modify'
-  );
+  const scope = encodeURIComponent([
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/gmail.metadata',
+    'https://www.googleapis.com/auth/gmail.settings.basic'
+  ].join(' '));
   
-  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+  const state = JSON.stringify({
+    operational: true,
+    syncFrequency: 5 // minutes
+  });
+  
+  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent&state=${encodeURIComponent(state)}`;
   
   return NextResponse.redirect(url);
 }
