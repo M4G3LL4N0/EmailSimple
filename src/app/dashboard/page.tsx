@@ -1,10 +1,12 @@
-import { PageShell } from "@/components/PageShell";
-import { DailyBrief } from "@/components/DailyBrief";
-import { PriorityView } from "@/components/PriorityView";
-import { DeadlineTimeline } from "@/components/DeadlineTimeline";
-import { ActionCenter } from "@/components/ActionCenter";
-import { FollowUpRadar } from "@/components/FollowUpRadar";
-import { AIReplyAssist } from "@/components/AIReplyAssist";
+import { 
+  PageShell,
+  DailyBrief,
+  PriorityView,
+  DeadlineTimeline,
+  ActionCenter,
+  FollowUpRadar,
+  AIReplyAssist
+} from "@/components";
 
 export default function DashboardPage() {
   return (
