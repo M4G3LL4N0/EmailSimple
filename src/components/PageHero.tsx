@@ -11,6 +11,12 @@ interface PageHeroProps {
     text: string;
     href: string;
   };
+  stats?: {
+    label: string;
+    value: string;
+    subtext?: string;
+    improvement?: string;
+  }[];
 }
 
 export function PageHero({
