@@ -45,10 +45,20 @@ export interface EmailMessage {
   /** List of labels/tags */
   labels: string[];
   /** Metadata for processing */
-  metadata?: {
-    hasActionItems?: boolean;
-    hasDeadlines?: boolean;
-    requiresFollowUp?: boolean;
+  metadata: {
+    processing: {
+      hasActionItems?: boolean;
+      hasDeadlines?: boolean;
+      requiresFollowUp?: boolean;
+      processedAt?: Date;
+    };
+    provider: {
+      labels?: string[];
+      categories?: string[];
+      importance?: number;
+      spamScore?: number;
+      headers?: Record<string, string>;
+    };
   };
 }
 

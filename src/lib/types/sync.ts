@@ -1,10 +1,29 @@
 // Sync state and progress types
 export interface SyncState {
   accountId: string;
-  lastSyncToken?: string; // Provider-specific token (e.g., Gmail history ID)
-  lastFullSyncAt: Date;
-  isRunning: boolean;
-  pendingThreads: number;
+  providerToken?: string; // Provider-specific sync token
+  fullSyncToken?: string; // For full sync checkpointing
+  syncMode: 'full' | 'delta';
+  status: 'idle' | 'syncing' | 'paused' | 'error';
+  lastSyncAt?: Date;
+  lastSuccessfulSyncAt?: Date;
+  syncWindow: {
+    start: Date;
+    end: Date;
+  };
+  statistics: {
+    totalThreads: number;
+    processedThreads: number;
+    failedThreads: number;
+    messageCount: number;
+    attachmentCount: number;
+  };
+  rateLimiting: {
+    lastRateLimitAt?: Date;
+    rateLimitResetAt?: Date;
+    remainingRequests: number;
+  };
+  error?: SyncError;
 }
 
 export interface SyncProgress {

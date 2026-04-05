@@ -15,13 +15,14 @@ export interface EmailAccount {
   lastSyncAt?: Date;
   syncStatus: 'idle' | 'syncing' | 'error';
   syncError?: string;
-  syncState?: {
-    lastSyncToken?: string;
-    lastHistoryId?: string;
-    lastFullSyncAt?: Date;
-    pendingThreads: number;
-    processedThreads: number;
-    totalThreads: number;
+  syncState?: SyncState;
+  providerConfig?: {
+    daysToSync?: number; // How far back to sync initially
+    syncInterval?: number; // Minutes between syncs
+    batchSize?: number; // Max threads to request per batch
+    maxRetries?: number; // Max retry attempts per thread
+    labels?: string[]; // Labels to include/exclude
+    filters?: string[]; // Advanced filters
   };
   createdAt: Date;
   updatedAt: Date;

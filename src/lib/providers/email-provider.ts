@@ -3,11 +3,15 @@ export interface EmailProvider {
   // Authentication
   authenticate(): Promise<AuthResult>;
   refreshToken(): Promise<void>;
+  validateCredentials(): Promise<boolean>;
   
-  // Thread operations
-  listThreads(options?: ThreadListOptions): Promise<ThreadSummary[]>;
+  // Batch sync operations
+  getDeltaSync(options: DeltaSyncOptions): Promise<DeltaSyncResult>;
+  getFullSync(options: FullSyncOptions): Promise<FullSyncResult>;
+  
+  // Individual operations
   getThread(threadId: string): Promise<NormalizedThread>;
-  getThreadsSince(since: Date): Promise<ThreadSummary[]>;
+  getThreads(filter: ThreadFilter): Promise<ThreadSummary[]>;
   
   // Message operations
   getMessage(messageId: string): Promise<NormalizedMessage>;
