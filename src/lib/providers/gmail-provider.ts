@@ -24,6 +24,38 @@ export class GmailProvider implements EmailProvider {
     return 'informational';
   }
 
+  private getUrgencyLevel(context: {
+    labels: string[];
+    hasDeadlineKeywords: boolean;
+    participants: string[];
+    messageCount: number;
+  }): 'immediate' | 'urgent' | 'soon' | 'eventual' {
+    if (context.hasDeadlineKeywords) {
+      return 'immediate';
+    }
+    if (context.labels.includes('URGENT')) {
+      return 'urgent';
+    }
+    if (context.labels.includes('FOLLOWUP')) {
+      return 'soon';
+    }
+    return 'eventual';
+  }
+
+  private getConsequenceLevel(context: {
+    labels: string[];
+    participants: string[];
+    messageCount: number;
+  }): 'high' | 'medium' | 'low' {
+    if (context.participants.some(p => p.includes('executive'))) {
+      return 'high';
+    }
+    if (context.participants.some(p => p.includes('manager'))) {
+      return 'medium';
+    }
+    return 'low';
+  }
+
   private getNextSteps(context: {
     labels: string[];
     isUnread: boolean;
@@ -273,6 +305,17 @@ export class GmailProvider implements EmailProvider {
           hasDeadline: false, // Will be detected from content
           stakeholders: [], // Will be extracted from participants
           classificationReason: 'Default classification',
+          urgencyLevel: this.getUrgencyLevel({
+            labels: thread.labelIds || [],
+            hasDeadlineKeywords: false,
+            participants: [],
+            messageCount: thread.estimateCount || 1
+          }),
+          consequenceLevel: this.getConsequenceLevel({
+            labels: thread.labelIds || [],
+            participants: [],
+            messageCount: thread.estimateCount || 1
+          }),
           nextSteps: this.getNextSteps({
             labels: thread.labelIds || [],
             isUnread: thread.labelIds?.includes('UNREAD') || false,
@@ -381,6 +424,17 @@ export class GmailProvider implements EmailProvider {
             labels: threadData.labelIds || [],
             hasDeadlineKeywords,
             actionRequired: threadData.labelIds?.includes('IMPORTANT') || false,
+            participants: Array.from(participants),
+            messageCount: messages.length
+          }),
+          urgencyLevel: this.getUrgencyLevel({
+            labels: threadData.labelIds || [],
+            hasDeadlineKeywords,
+            participants: Array.from(participants),
+            messageCount: messages.length
+          }),
+          consequenceLevel: this.getConsequenceLevel({
+            labels: threadData.labelIds || [],
             participants: Array.from(participants),
             messageCount: messages.length
           }),
