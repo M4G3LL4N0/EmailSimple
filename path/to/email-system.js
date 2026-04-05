@@ -1,4 +1,4 @@
-// EmailSystem - Core pipeline and extraction logic
+//EmailSystem - Core pipeline and extraction logic
 // Handles inbox data flow from pipeline to dashboard
 export interface EmailData {
   threads: Thread[];
