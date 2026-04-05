@@ -60,15 +60,18 @@ export function DailyBrief() {
       <div className="mb-5 flex items-center justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-white/45">
-            Today&apos;s brief
+            Your Action Plan
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
-            What matters now
+            Today&apos;s Critical Path
           </h2>
+          <p className="mt-2 text-sm text-white/65">
+            Prioritized by impact and urgency. Tap to expand details.
+          </p>
         </div>
 
         <div className="glass-soft rounded-[16px] px-4 py-2 text-sm text-white/75">
-          {briefItems.length} items flagged
+          {briefItems.length} critical items
         </div>
       </div>
 

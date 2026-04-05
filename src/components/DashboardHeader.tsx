@@ -18,9 +18,13 @@ export function DashboardHeader() {
         </Link>
 
         <nav className="flex items-center gap-7 text-[15px] text-muted">
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/settings">Settings</Link>
-          <Link href="/help">Help</Link>
+          <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
+          <Link href="/settings" className="hover:text-white transition-colors">Settings</Link>
+          <Link href="/help" className="hover:text-white transition-colors">Help</Link>
+          <div className="w-px h-6 bg-white/10" />
+          <button className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+            Take Tour
+          </button>
         </nav>
       </div>
     </header>

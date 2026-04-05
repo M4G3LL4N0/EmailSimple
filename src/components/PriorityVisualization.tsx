@@ -2,8 +2,11 @@ export function PriorityVisualization() {
   return (
     <section className="glass rounded-[28px] p-6">
       <h2 className="text-[22px] font-bold tracking-tight mb-5">
-        Priority Overview
+        Priority Heatmap
       </h2>
+      <p className="mb-6 text-sm text-white/65">
+        Visualized by impact and urgency scores across all threads
+      </p>
       
       <div className="space-y-4">
         <div className="flex items-center justify-between">

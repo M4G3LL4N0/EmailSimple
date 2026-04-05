@@ -13,10 +13,10 @@ export function TrustStrip() {
             Why EmailSimple Wins
           </div>
           <h2 className="mt-6 text-4xl font-semibold tracking-[-0.04em] text-white">
-            Beyond summarization - real workflow automation
+            Your Email Operating System
           </h2>
           <p className="mt-4 text-lg leading-7 text-white/75">
-            We don't just shorten your emails - we extract what matters and put it where it belongs in your workflow.
+            EmailSimple transforms your inbox into an intelligent workflow platform - extracting priorities, deadlines, and actions while maintaining context.
           </p>
         </div>
 

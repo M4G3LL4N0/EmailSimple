@@ -2,8 +2,11 @@ export function FollowUpRisk() {
   return (
     <section className="glass rounded-[28px] p-6">
       <h2 className="text-[22px] font-bold tracking-tight mb-5">
-        Follow-up Risk
+        Follow-up Radar
       </h2>
+      <p className="mb-6 text-sm text-white/65">
+        Threads requiring attention based on response windows and stakeholder importance
+      </p>
       
       <div className="grid gap-3.5">
         {[

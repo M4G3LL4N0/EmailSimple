@@ -14,14 +14,18 @@ export default function DashboardPage() {
       <div className="container py-10">
         <div className="mb-8">
           <p className="text-xs uppercase tracking-[0.18em] text-white/45">
-            EmailSimple Dashboard
+            Your Operating Layer for Email
           </p>
           <h1 className="mt-2 text-4xl font-semibold tracking-[-0.05em] text-white">
-            Inbox intelligence
+            Inbox Intelligence Platform
           </h1>
           <p className="mt-3 max-w-2xl text-white/65">
-            A clean command layer for priorities, deadlines, follow-ups, and actions.
+            EmailSimple extracts what matters and puts it where it belongs in your workflow - priorities, deadlines, follow-ups, and actions.
           </p>
+          <div className="mt-4 flex gap-3">
+            <button className="primary-btn">Take the Tour</button>
+            <button className="secondary-btn">Watch Demo</button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-10">

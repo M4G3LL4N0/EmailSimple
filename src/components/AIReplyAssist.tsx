@@ -43,11 +43,14 @@ export function AIReplyAssist() {
     <section className="glass rounded-[28px] p-6">
       <div className="mb-5">
         <p className="text-xs uppercase tracking-[0.18em] text-white/45">
-          AI reply assist
+          Context-Aware Composer
         </p>
         <h2 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
-          Draft faster with context
+          Intelligent Reply Assistant
         </h2>
+        <p className="mt-2 text-sm text-white/65">
+          Drafts tailored to thread context, tone, and urgency
+        </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-[0.9fr_1.1fr]">
