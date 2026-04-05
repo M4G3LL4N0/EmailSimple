@@ -2,12 +2,9 @@ import {
   PageShell,
   PageHero,
   ProblemSection,
-  FeatureSection,
-  HowItWorks,
   DifferentiationSection,
   UseCasesSection,
   MarketOpportunity,
-  PricingSection,
   FAQSection,
   WaitlistSection,
   FinalCTA
@@ -24,12 +21,9 @@ export default function Page() {
         secondaryCta={{ text: "See the Product", href: "/dashboard" }}
       />
       <ProblemSection />
-      <FeatureSection />
-      <HowItWorks />
       <DifferentiationSection />
       <UseCasesSection />
       <MarketOpportunity />
-      <PricingSection />
       <FAQSection />
       <WaitlistSection />
       <FinalCTA />
