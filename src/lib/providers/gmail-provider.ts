@@ -24,6 +24,43 @@ export class GmailProvider implements EmailProvider {
     return 'informational';
   }
 
+  private getNextSteps(context: {
+    labels: string[];
+    isUnread: boolean;
+    priority: 'critical' | 'important' | 'informational';
+    actionRequired: boolean;
+  }): string[] {
+    const steps = [];
+    
+    if (context.priority === 'critical') {
+      steps.push('Respond ASAP - deadline approaching');
+      steps.push('Notify relevant stakeholders');
+      if (context.labels.includes('FOLLOWUP')) {
+        steps.push('Confirm receipt with sender');
+      }
+    }
+    else if (context.priority === 'important') {
+      steps.push('Respond within 24 hours');
+      if (context.isUnread) {
+        steps.push('Mark as read after processing');
+      }
+    }
+    else {
+      steps.push('Archive or label for reference');
+    }
+
+    if (context.actionRequired) {
+      steps.push('Add to action items');
+      steps.push('Set reminder to follow up');
+    }
+
+    if (context.labels.includes('WAITING')) {
+      steps.push('Flag for follow-up in 3 days');
+    }
+
+    return steps.length > 0 ? steps : ['Review when time permits'];
+  }
+
   private getClassificationReason(threadData: any): string {
     const labels = threadData.labelIds || [];
     const participants = threadData.messages?.flatMap((msg: any) => 
@@ -235,7 +272,13 @@ export class GmailProvider implements EmailProvider {
           requiresAction: thread.labelIds?.includes('IMPORTANT') || false,
           hasDeadline: false, // Will be detected from content
           stakeholders: [], // Will be extracted from participants
-          classificationReason: 'Default classification'
+          classificationReason: 'Default classification',
+          nextSteps: this.getNextSteps({
+            labels: thread.labelIds || [],
+            isUnread: thread.labelIds?.includes('UNREAD') || false,
+            priority: 'informational',
+            actionRequired: thread.labelIds?.includes('IMPORTANT') || false
+          })
         }
       })) || [];
     } catch (error) {
@@ -341,7 +384,19 @@ export class GmailProvider implements EmailProvider {
             participants: Array.from(participants),
             messageCount: messages.length
           }),
-          classificationReason: this.getClassificationReason(threadData)
+          classificationReason: this.getClassificationReason(threadData),
+          nextSteps: this.getNextSteps({
+            labels: threadData.labelIds || [],
+            isUnread: threadData.labelIds?.includes('UNREAD') || false,
+            priority: this.classifyPriority({
+              labels: threadData.labelIds || [],
+              hasDeadlineKeywords,
+              actionRequired: threadData.labelIds?.includes('IMPORTANT') || false,
+              participants: Array.from(participants),
+              messageCount: messages.length
+            }),
+            actionRequired: threadData.labelIds?.includes('IMPORTANT') || false
+          })
         }
       };
     } catch (error) {
