@@ -3,13 +3,30 @@ import { EmailProvider, AuthResult, ThreadSummary, NormalizedThread, NormalizedM
 import { EmailParticipant } from '@/lib/types/email';
 
 export class GmailProvider implements EmailProvider {
+  private trackError(type: string, message: string) {
+    this.lastSyncStatus.lastError = {
+      type,
+      message,
+      timestamp: new Date()
+    };
+    this.lastSyncStatus.stats.errors++;
+  }
   private lastSyncStatus = {
     timestamp: new Date(),
     state: 'idle' as 'idle' | 'syncing' | 'error',
     stats: {
       threadsProcessed: 0,
       messagesProcessed: 0,
-      errors: 0
+      errors: 0,
+      syncDuration: 0,
+      apiCalls: 0,
+      cacheHits: 0,
+      bandwidthUsed: 0
+    },
+    lastError: null as null | {
+      type: string;
+      message: string;
+      timestamp: Date;
     }
   };
 
@@ -123,7 +140,11 @@ export class GmailProvider implements EmailProvider {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch threads');
+        this.trackError('API_ERROR', 'Failed to fetch threads');
+        throw new Error(
+          'We\'re having trouble loading your emails. ' +
+          'This may be a temporary issue - please try again later.'
+        );
       }
 
       const data = await response.json();
@@ -175,7 +196,11 @@ export class GmailProvider implements EmailProvider {
       });
 
       if (!threadRes.ok) {
-        throw new Error('Failed to fetch thread');
+        this.trackError('API_ERROR', 'Failed to fetch thread');
+        throw new Error(
+          'We couldn\'t load this email thread. ' +
+          'Please try again or contact support if this persists.'
+        );
       }
 
       const threadData = await threadRes.json();
@@ -339,10 +364,24 @@ export class GmailProvider implements EmailProvider {
   }
   
   async getSyncStatus() {
-    return {
+    const status = {
       ...this.lastSyncStatus,
-      nextSyncAt: new Date(Date.now() + 5*60*1000) // Next sync in 5 min
+      nextSyncAt: new Date(Date.now() + 5*60*1000), // Next sync in 5 min
+      health: 'healthy' as 'healthy' | 'degraded' | 'unhealthy',
+      syncWindow: {
+        start: new Date(Date.now() - 24*60*60*1000), // Last 24 hours
+        end: new Date()
+      }
     };
+
+    // Determine health status
+    if (this.lastSyncStatus.stats.errors > 10) {
+      status.health = 'unhealthy';
+    } else if (this.lastSyncStatus.stats.errors > 3) {
+      status.health = 'degraded';
+    }
+
+    return status;
   }
 
   async verifyWebhook(payload: unknown): Promise<boolean> {
