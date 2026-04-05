@@ -40,4 +40,23 @@ export interface EmailThread {
   priorityScore?: number;
   /** Summary/abstract of thread */
   summary?: string;
+  /** Metadata for dashboard processing */
+  meta: {
+    /** Number of participants */
+    participantCount: number;
+    /** Number of messages */
+    messageCount: number;
+    /** Days since last message */
+    daysSinceLastMessage: number;
+    /** Whether thread contains attachments */
+    hasAttachments: boolean;
+    /** Whether thread contains calendar invites */
+    hasCalendarInvites: boolean;
+    /** Whether thread contains action items */
+    hasActionItems: boolean;
+    /** Whether thread contains deadlines */
+    hasDeadlines: boolean;
+    /** Whether thread requires follow-up */
+    requiresFollowUp: boolean;
+  };
 }
