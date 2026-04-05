@@ -8,7 +8,28 @@ export interface BriefItemBase {
   /** Detailed context markdown */
   context: string;
   priority: PriorityLevel;
-  status: "new" | "seen" | "completed" | "dismissed";
+  status: BriefItemStatus;
+  /** Related thread/message IDs */
+  relatedIds: {
+    threadId?: string;
+    messageId?: string;
+    emailId?: string;
+  };
+  /** Metadata for rendering */
+  meta: {
+    /** Whether this is a recurring item */
+    isRecurring?: boolean;
+    /** Whether this requires approval */
+    requiresApproval?: boolean;
+    /** Whether this involves external parties */
+    hasExternalParties?: boolean;
+    /** Confidence score for this item (0-100) */
+    confidence?: number;
+    /** Risk level */
+    riskLevel?: 'low' | 'medium' | 'high';
+    /** Tags for categorization */
+    tags?: string[];
+  };
 }
 
 export const PRIORITY_LEVELS = ["critical", "high", "medium", "low", "monitoring"] as const;

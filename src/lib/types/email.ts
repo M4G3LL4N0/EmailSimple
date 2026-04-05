@@ -33,10 +33,9 @@ export interface EmailMessage {
   id: string;
   threadId: string;
   from: EmailParticipant;
-  to: {
-    address: string;
-    name?: string;
-  }[];
+  to: EmailParticipant[];
+  cc?: EmailParticipant[];
+  bcc?: EmailParticipant[];
   subject: string;
   body: string;
   /** Date received */
@@ -44,6 +43,8 @@ export interface EmailMessage {
   isRead: boolean;
   /** List of labels/tags */
   labels: string[];
+  /** Attachments if any */
+  attachments?: EmailAttachment[];
   /** Metadata for processing */
   metadata: {
     processing: {
@@ -51,6 +52,12 @@ export interface EmailMessage {
       hasDeadlines?: boolean;
       requiresFollowUp?: boolean;
       processedAt?: Date;
+      /** Confidence scores for extraction */
+      confidence?: {
+        actionItems?: number;
+        deadlines?: number;
+        followUp?: number;
+      };
     };
     provider: {
       labels?: string[];
@@ -72,6 +79,15 @@ export interface EmailThread {
   priorityScore?: number;
   /** Summary/abstract of thread */
   summary?: string;
+  /** Status tracking */
+  status: {
+    /** Whether thread has been archived */
+    archived?: boolean;
+    /** Whether thread has been snoozed */
+    snoozedUntil?: Date;
+    /** Whether thread has been marked as done */
+    done?: boolean;
+  };
   /** Metadata for dashboard processing */
   meta: {
     /** Number of participants */
@@ -106,6 +122,10 @@ export interface EmailThread {
       riskScore?: number;
       /** Importance score (0-100) */
       importanceScore?: number;
+      /** Urgency score (0-100) */
+      urgencyScore?: number;
+      /** Relationship score (0-100) */
+      relationshipScore?: number;
     };
   };
 }
