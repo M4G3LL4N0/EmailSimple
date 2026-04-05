@@ -1,3 +1,4 @@
+// Normalized email data model
 export interface EmailParticipant {
   address: string;
   name?: string;
