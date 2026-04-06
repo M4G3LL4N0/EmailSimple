@@ -1,54 +1,66 @@
 // Base email provider interface and types
-export interface EmailProvider {
+export interface EmailProvider<Config = any> {
   // Connection management
-  connect(): Promise<ConnectionStatus>;
+  connect(config?: Config): Promise<ConnectionStatus>;
   disconnect(): Promise<void>;
-  getConnectionHealth(): Promise<ConnectionMetrics>;
-  
+  getConnectionHealth(): Promise<ConnectionHealth>;
+  refreshToken(): Promise<void>;
+
   // Sync operations
-  startSync(syncType: 'full' | 'delta'): Promise<SyncSession>;
-  pauseSync(sessionId: string): Promise<void>;
-  resumeSync(sessionId: string): Promise<SyncSession>;
-  getSyncProgress(sessionId: string): Promise<SyncProgress>;
+  startSync(options: {
+    type: 'full' | 'delta';
+    since?: Date;
+    labels?: string[];
+    maxThreads?: number;
+  }): Promise<SyncSession>;
   
-  // Thread operations  
-  listThreads(options: {
+  getSyncStatus(sessionId: string): Promise<SyncStatus>;
+  cancelSync(sessionId: string): Promise<void>;
+
+  // Thread operations
+  getThreads(options: {
     after?: Date;
     before?: Date;
     labels?: string[];
     limit?: number;
-  }): AsyncIterable<ThreadBatch>;
-  
+    pageToken?: string;
+  }): Promise<{
+    threads: NormalizedThread[];
+    nextPageToken?: string;
+    estimatedTotal?: number;
+  }>;
+
   getThread(threadId: string): Promise<NormalizedThread>;
-  batchGetThreads(threadIds: string[]): Promise<NormalizedThread[]>;
-  
-  // Message operations
-  listMessages(options: {
-    threadId?: string;
-    after?: Date;
-    before?: Date;
-    limit?: number;
-  }): AsyncIterable<MessageBatch>;
-  
+  getThreadsById(threadIds: string[]): Promise<NormalizedThread[]>;
+
+  // Intelligence extraction
+  extractFromThread(threadId: string): Promise<{
+    priorities?: PriorityScore[];
+    actions?: ExtractedAction[];
+    deadlines?: ExtractedDeadline[];
+    followUps?: FollowUpSignal[];
+  }>;
+
   // Webhooks
-  setupWebhook?(config: WebhookConfig): Promise<WebhookInfo>;
+  setupWebhook?(config: WebhookConfig): Promise<WebhookSetup>;
   verifyWebhook?(payload: unknown): Promise<boolean>;
-  
-  // Normalization
-  normalizeThread(raw: any): NormalizedThread;
-  normalizeMessage(raw: any): NormalizedMessage;
-  normalizeParticipant(raw: any): EmailParticipant;
-  normalizeLabels(raw: any): string[];
-  normalizeAttachments(raw: any): Attachment[];
-  
+  listWebhooks?(): Promise<WebhookInfo[]>;
+  deleteWebhook?(webhookId: string): Promise<void>;
+
   // Metadata
-  readonly provider: 'gmail' | 'outlook' | 'imap';
+  readonly provider: string;
   readonly accountId: string;
   readonly capabilities: {
-    deltaSync: boolean;
-    fullSync: boolean;
-    webhooks: boolean;
-    batchOperations: boolean;
+    realtime: boolean;
+    batch: boolean;
+    attachments: boolean;
+    labels: boolean;
+    intelligence: boolean;
+  };
+  readonly limits: {
+    rateLimit: number;
+    quota: number;
+    maxBatchSize: number;
   };
 }
 

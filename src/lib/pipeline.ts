@@ -8,12 +8,75 @@ import { ReplySuggestions } from "./extraction/replies";
 import { generateMockEmails } from "./mock/emails";
 
 export interface PipelineOutput {
-  priorities: PrioritySummary;
-  deadlines: GeneratedDeadlines;
-  actions: GeneratedActions;
-  followUps: GeneratedFollowUps;
+  /** When this analysis was generated */
+  generatedAt: Date;
+  /** Account being analyzed */
+  accountId: string;
+  /** Threads processed in this run */
+  threadsProcessed: number;
+  /** Messages processed in this run */
+  messagesProcessed: number;
+  /** Priority analysis results */
+  priorities: {
+    summary: PrioritySummary;
+    /** Top 3 critical items */
+    critical: PriorityScore[];
+    /** Items needing review */
+    review: PriorityScore[];
+    /** Stats by priority level */
+    stats: {
+      high: number;
+      medium: number;
+      low: number;
+    };
+  };
+  /** Extracted deadlines */
+  deadlines: {
+    /** All deadlines */
+    all: GeneratedDeadlines;
+    /** Urgent deadlines (due within 24h) */
+    urgent: GeneratedDeadlines;
+    /** Upcoming deadlines (due within 7d) */
+    upcoming: GeneratedDeadlines;
+  };
+  /** Action items */
+  actions: {
+    /** All actions */
+    all: GeneratedActions;
+    /** Critical actions */
+    critical: GeneratedActions;
+    /** Completed actions */
+    completed: GeneratedActions;
+  };
+  /** Follow-up signals */
+  followUps: {
+    /** All follow-ups */
+    all: GeneratedFollowUps;
+    /** High-risk follow-ups */
+    highRisk: GeneratedFollowUps;
+    /** Recently surfaced */
+    recent: GeneratedFollowUps;
+  };
+  /** Daily brief synthesis */
   dailyBrief: DailyBrief;
-  replySuggestions: ReplySuggestions;
+  /** Reply suggestions */
+  replySuggestions: {
+    /** All suggestions */
+    all: ReplySuggestions;
+    /** Priority suggestions */
+    priority: ReplySuggestions;
+    /** Quick replies */
+    quick: ReplySuggestions;
+  };
+  /** Pipeline execution metadata */
+  meta: {
+    /** Time taken in ms */
+    duration: number;
+    /** Any errors encountered */
+    errors: PipelineError[];
+    /** Provider-specific metadata */
+    provider?: Record<string, unknown>;
+  };
 }
 
 export async function runEmailPipeline(provider: EmailProvider): Promise<PipelineOutput> {

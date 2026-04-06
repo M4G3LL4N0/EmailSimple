@@ -69,20 +69,66 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-10">
-          <DailyBrief />
-
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-7">
-            <div className="lg:col-span-4 grid gap-8">
-              <PriorityView />
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                <FollowUpRadar />
-                <DeadlineTimeline />
+        <div className="grid grid-cols-1 gap-8">
+          {/* Executive Summary */}
+          <div className="glass rounded-[28px] p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.18em] text-white/45">
+                  Your Email Command Center
+                </p>
+                <h1 className="mt-2 text-3xl font-bold tracking-tight">
+                  Today's Critical Path
+                </h1>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="glass-soft rounded-full px-4 py-2 text-sm">
+                  <span className="text-white/75">Last sync:</span> 2 min ago
+                </div>
+                <button className="secondary-btn px-4 py-2 text-sm">
+                  Sync Now
+                </button>
               </div>
             </div>
 
-            <div className="lg:col-span-3 grid gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="glass-soft rounded-[20px] p-4 border-l-4 border-red-500/80">
+                <p className="text-sm text-white/75">Urgent Priorities</p>
+                <p className="mt-1 text-xl font-semibold">3 Items</p>
+                <p className="mt-2 text-xs text-white/60">
+                  Contracts, payments, deadlines
+                </p>
+              </div>
+              <div className="glass-soft rounded-[20px] p-4 border-l-4 border-amber-500/80">
+                <p className="text-sm text-white/75">Pending Actions</p>
+                <p className="mt-1 text-xl font-semibold">5 Items</p>
+                <p className="mt-2 text-xs text-white/60">
+                  Replies, approvals, follow-ups
+                </p>
+              </div>
+              <div className="glass-soft rounded-[20px] p-4 border-l-4 border-cyan-500/80">
+                <p className="text-sm text-white/75">Time Saved</p>
+                <p className="mt-1 text-xl font-semibold">2.1 hrs</p>
+                <p className="mt-2 text-xs text-white/60">
+                  Today's estimated savings
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Dashboard Grid */}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-7">
+            {/* Left Column - Intelligence Core */}
+            <div className="lg:col-span-5 grid gap-8">
+              <DailyBrief />
+              <PriorityView />
+            </div>
+
+            {/* Right Column - Action Tools */}
+            <div className="lg:col-span-2 grid gap-8">
               <ActionCenter />
+              <FollowUpRadar />
+              <DeadlineTimeline />
               <AIReplyAssist />
             </div>
           </div>

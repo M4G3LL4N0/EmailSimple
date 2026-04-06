@@ -178,9 +178,33 @@ export function PriorityView() {
                       style={{ width: `${item.score}%` }}
                     />
                   </div>
-                  <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
-                    Score {item.score}
-                  </span>
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="relative w-12 h-12">
+                      <svg className="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                          d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#1e293b"
+                          strokeWidth="3"
+                        />
+                        <path
+                          d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke={item.priority === 'High' ? '#ef4444' : item.priority === 'Medium' ? '#f59e0b' : '#10b981'}
+                          strokeWidth="3"
+                          strokeDasharray={`${item.score}, 100`}
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center text-xs font-bold">
+                        {item.score}
+                      </div>
+                    </div>
+                    <span className="text-xs text-white/60">Priority</span>
+                  </div>
                 </div>
               </div>
             </div>

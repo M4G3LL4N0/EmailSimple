@@ -48,12 +48,23 @@ const priorityClasses: Record<BriefItem["priority"], string> = {
 };
 
 export function DailyBrief() {
-  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
+  const [dismissedItems, setDismissedItems] = useState<Record<string, {dismissedAt: Date, reason?: string}>>({});
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const briefItems = useMemo(
-    () => initialBriefItems.filter((item) => !dismissedIds.includes(item.id)),
-    [dismissedIds]
-  );
+  const briefItems = useMemo(() => {
+    return initialBriefItems.filter(item => !dismissedItems[item.id]);
+  }, [dismissedItems]);
+
+  const handleDismiss = (id: string, reason: 'completed' | 'deferred' | 'irrelevant') => {
+    setDismissedItems(prev => ({
+      ...prev,
+      [id]: {
+        dismissedAt: new Date(),
+        reason
+      }
+    }));
+    setExpandedId(null);
+  };
 
   return (
     <section className="glass rounded-[28px] p-6">
