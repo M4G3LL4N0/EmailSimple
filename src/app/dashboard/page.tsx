@@ -12,24 +12,66 @@ export default function DashboardPage() {
   return (
     <PageShell>
       <div className="container py-10">
-        {/* Top Summary Strip */}
+        {/* Command Center Header */}
         <div className="glass rounded-[28px] p-6 mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between gap-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-white/45">
-                Your Operating Layer for Email
-              </p>
-              <h1 className="mt-2 text-4xl font-semibold tracking-[-0.05em] text-white">
-                Your Critical Path
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-3 h-3 rounded-full bg-red-500 pulse-animation" />
+                <p className="text-xs uppercase tracking-[0.16em] text-red-400">
+                  Action Required
+                </p>
+              </div>
+              <h1 className="text-3xl font-semibold tracking-tight text-white">
+                Your Email Command Center
               </h1>
+              <p className="mt-3 text-sm text-white/75 max-w-2xl">
+                Priority-filtered view showing what needs attention now, why it matters, 
+                and recommended next steps.
+              </p>
+          
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                <div className="glass-soft rounded-xl p-4 border-l-4 border-red-500">
+                  <p className="text-xs uppercase tracking-wider text-white/60 mb-2">
+                    Critical Items
+                  </p>
+                  <p className="text-2xl font-bold text-white">3</p>
+                  <p className="mt-1 text-xs text-white/60">
+                    Immediate attention needed
+                  </p>
+                </div>
+                <div className="glass-soft rounded-xl p-4 border-l-4 border-amber-500">
+                  <p className="text-xs uppercase tracking-wider text-white/60 mb-2">
+                    High Value
+                  </p>
+                  <p className="text-2xl font-bold text-white">5</p>
+                  <p className="mt-1 text-xs text-white/60">
+                    Strategic impacts
+                  </p>
+                </div>
+                <div className="glass-soft rounded-xl p-4 border-l-4 border-green-500">
+                  <p className="text-xs uppercase tracking-wider text-white/60 mb-2">
+                    Time Saved
+                  </p>
+                  <p className="text-2xl font-bold text-white">2.1h</p>
+                  <p className="mt-1 text-xs text-white/60">
+                    Today's projected savings  
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="glass-soft rounded-[16px] px-4 py-2 text-sm">
-                <span className="text-white/75">Analyzed:</span> 47 threads
+          
+            <div className="flex flex-col gap-3 min-w-[200px]">
+              <div className="glass-soft rounded-lg p-3 text-center">
+                <p className="text-xs text-white/60">Last sync</p>
+                <p className="text-sm font-medium mt-1">2 min ago</p>
               </div>
-              <div className="glass-soft rounded-[16px] px-4 py-2 text-sm">
-                <span className="text-white/75">Impact:</span> 9 items
-              </div>
+              <button className="secondary-btn w-full py-2 text-sm">
+                Sync Now
+              </button>
+              <button className="secondary-btn w-full py-2 text-sm">
+                View Full Inbox
+              </button>
             </div>
           </div>
           

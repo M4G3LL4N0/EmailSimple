@@ -106,15 +106,20 @@ export function DailyBrief() {
     );
   };
 
-  const stats = useMemo(() => ({
-    total: items.length,
-    active: items.filter(item => item.status !== "completed").length,
-    completed: items.filter(item => item.status === "completed").length,
-    critical: items.filter(item => item.priority === "Critical").length,
-    high: items.filter(item => item.priority === "High").length,
-    medium: items.filter(item => item.priority === "Medium").length,
-    low: items.filter(item => item.priority === "Low").length,
-  }), [items]);
+  const stats = useMemo(() => {
+    const activeItems = items.filter(item => item.status !== "completed");
+    return {
+      total: items.length,
+      active: activeItems.length,
+      completed: items.filter(item => item.status === "completed").length,
+      critical: activeItems.filter(item => item.priority === "Critical").length,
+      high: activeItems.filter(item => item.priority === "High").length,
+      medium: activeItems.filter(item => item.priority === "Medium").length,
+      low: activeItems.filter(item => item.priority === "Low").length,
+      valueAtRisk: activeItems.reduce((sum, item) => sum + (item.context.value || 0), 0),
+      estimatedTime: activeItems.reduce((sum, item) => sum + (item.actions.estimatedTime || 0), 0)
+    };
+  }, [items]);
 
   return (
     <section className="glass rounded-[28px] p-6">
