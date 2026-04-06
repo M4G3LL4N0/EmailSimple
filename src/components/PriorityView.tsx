@@ -148,9 +148,22 @@ export function PriorityView() {
                 <h3 className="text-lg font-semibold text-white">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm leading-7 text-white/65">
-                  {item.insights.keyReason}
-                </p>
+                <div className="mt-3 text-sm leading-7 text-white/68 bg-gradient-to-r from-white/5 to-transparent p-3 rounded-lg">
+                  <p className="font-medium mb-1">{item.insights.keyReason}</p>
+                  <p className="text-xs text-white/60 mt-2">
+                    <span className="font-medium">Context:</span> {item.insights.context.join(" • ")}
+                  </p>
+                  <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/10 pt-3">
+                    <div>
+                      <p className="text-xs text-white/60">Risk</p>
+                      <p className="text-xs font-medium">{item.insights.risks.join(", ")}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-white/60">Benefit</p>
+                      <p className="text-xs font-medium">{item.insights.benefits.join(", ")}</p>
+                    </div>
+                  </div>
+                </div>
                 <div className="mt-3 space-y-2">
                   <div className="flex gap-2 text-xs text-white/60">
                     <span>Urgency: {item.factors.urgency}</span>
