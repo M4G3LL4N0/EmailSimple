@@ -171,7 +171,80 @@ async function organizeIntoThreads(emails: EmailMessage[]): Promise<EmailThread[
 }
 
 async function extractPriorities(threads: EmailThread[]): Promise<PrioritySummary> {
-  return {} as PrioritySummary;
+  const now = new Date();
+  const criticalThreshold = 85;
+  const highThreshold = 70;
+
+  const scores = threads.map(thread => {
+    // Base score from provider's initial analysis
+    let score = thread.decisionContext.priorityScore;
+
+    // Boost for unread threads
+    if (thread.unread) score = Math.min(score + 10, 100);
+
+    // Boost for recent activity
+    const hoursSinceLastActivity = (now.getTime() - thread.lastActivity.getTime()) / (1000 * 60 * 60);
+    if (hoursSinceLastActivity < 24) {
+      score = Math.min(score + 5, 100);
+    }
+
+    // Boost for high consequence
+    if (thread.decisionContext.consequenceLevel === 'high') {
+      score = Math.min(score + 15, 100);
+    }
+
+    // Penalize for low confidence
+    score = Math.max(score * thread.decisionContext.confidenceScore, 0);
+
+    return {
+      id: thread.id,
+      threadId: thread.id,
+      title: thread.subject,
+      reason: thread.decisionContext.classificationReason,
+      keyReason: thread.decisionContext.actionRequired 
+        ? 'Requires your action' 
+        : thread.decisionContext.hasDeadlineKeywords
+          ? 'Contains deadline'
+          : 'Important conversation',
+      score,
+      level: score >= criticalThreshold ? 'critical' 
+            : score >= highThreshold ? 'high' 
+            : 'medium',
+      factors: {
+        urgency: thread.decisionContext.urgencyLevel === 'immediate' ? 90 
+                : thread.decisionContext.urgencyLevel === 'urgent' ? 70 
+                : 40,
+        importance: thread.decisionContext.consequenceLevel === 'high' ? 90 
+                  : thread.decisionContext.consequenceLevel === 'medium' ? 70 
+                  : 40,
+        senderWeight: thread.participants.some(p => p.role === 'from' && p.isInternal) ? 80 : 50,
+        engagement: thread.messages.length > 3 ? 70 : 40,
+        stakeholderCount: thread.decisionContext.stakeholders.length,
+        threadCount: 1, // Single thread
+        staleness: hoursSinceLastActivity > 48 ? 30 : 70,
+        confidence: Math.round(thread.decisionContext.confidenceScore * 100)
+      },
+      evaluatedAt: now,
+      relations: {
+        actions: [],
+        deadlines: [],
+        followups: []
+      }
+    };
+  });
+
+  return {
+    updatedAt: now,
+    totalThreads: scores.length,
+    byLevel: {
+      critical: scores.filter(s => s.level === 'critical').length,
+      high: scores.filter(s => s.level === 'high').length,
+      medium: scores.filter(s => s.level === 'medium').length,
+      low: 0
+    },
+    critical: scores.filter(s => s.level === 'critical').slice(0, 3),
+    reviews: scores.filter(s => s.score >= 60 && s.score < 80).slice(0, 5)
+  };
 }
 
 async function extractDeadlines(threads: EmailThread[]): Promise<GeneratedDeadlines> {

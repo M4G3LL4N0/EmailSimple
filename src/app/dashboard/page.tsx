@@ -15,19 +15,30 @@ export default function DashboardPage() {
         {/* Command Center Header */}
         <div className="glass rounded-[28px] p-6 mb-8">
           <div className="flex items-start justify-between gap-6">
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-3 h-3 rounded-full bg-red-500 pulse-animation" />
                 <p className="text-xs uppercase tracking-[0.16em] text-red-400">
-                  Action Required
+                  Operational Dashboard
                 </p>
               </div>
-              <h1 className="text-3xl font-semibold tracking-tight text-white">
-                Your Email Command Center
-              </h1>
+            
+              <div className="flex items-end gap-4">
+                <h1 className="text-3xl font-semibold tracking-tight text-white">
+                  Inbox Command Center
+                </h1>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80">
+                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                  </span>
+                  <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80">
+                    v2.1.0
+                  </span>
+                </div>
+              </div>
+
               <p className="mt-3 text-sm text-white/75 max-w-2xl">
-                Priority-filtered view showing what needs attention now, why it matters, 
-                and recommended next steps.
+                <span className="font-medium">Current focus:</span> {priorities.critical.length} critical items, {actions.all.length} pending actions, and {deadlines.urgent.length} upcoming deadlines requiring attention today.
               </p>
           
               <div className="mt-6 grid grid-cols-3 gap-4">

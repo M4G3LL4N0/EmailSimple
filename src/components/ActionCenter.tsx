@@ -2,7 +2,18 @@ type ActionItem = {
   id: string;
   title: string;
   detail: string;
-  status: "Due now" | "Pending" | "Draft reply";
+  status: "critical" | "due" | "pending" | "draft" | "completed";
+  priority: PriorityLevel;
+  threadId: string;
+  dueAt?: Date;
+  stakeholders: {
+    name: string;
+    role: string;
+    isBlocking: boolean;
+  }[];
+  estimatedTime: number; // minutes
+  suggestedNextStep: string;
+  lastUpdatedAt: Date;
 };
 
 const actions: ActionItem[] = [

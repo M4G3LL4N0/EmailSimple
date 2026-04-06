@@ -89,61 +89,34 @@ export interface EmailMessage {
 
 export interface EmailThread {
   id: string;
-  /** Most recent message */
-  latestMessage: EmailMessage;
-  /** All messages in chronological order */
+  providerThreadId: string;
+  accountId: string;
+  subject: string;
+  participants: EmailParticipant[];
   messages: EmailMessage[];
-  /** Thread priority score */
-  priorityScore?: number;
-  /** Summary/abstract of thread */
-  summary?: string;
-  /** Status tracking */
-  status: {
-    /** Whether thread has been archived */
-    archived?: boolean;
-    /** Whether thread has been snoozed */
-    snoozedUntil?: Date;
-    /** Whether thread has been marked as done */
-    done?: boolean;
-  };
-  /** Metadata for dashboard processing */
-  meta: {
-    /** Number of participants */
-    participantCount: number;
-    /** Number of messages */
-    messageCount: number;
-    /** Days since last message */
-    daysSinceLastMessage: number;
-    /** Whether thread contains attachments */
+  labels: string[];
+  unread: boolean;
+  lastActivity: Date;
+  syncStatus: 'synced' | 'pending' | 'error';
+  syncedAt?: Date;
+  
+  // Decision context
+  decisionContext: {
+    priorityLevel: 'critical' | 'important' | 'informational';
+    priorityScore: number; // 0-100
+    urgencyLevel: 'immediate' | 'urgent' | 'soon' | 'eventual';
+    consequenceLevel: 'high' | 'medium' | 'low';
+    confidenceScore: number; // 0-1
+    classificationReason: string;
+    nextSteps: string[];
     hasAttachments: boolean;
-    /** Whether thread contains calendar invites */
-    hasCalendarInvites: boolean;
-    /** Whether thread contains action items */
-    hasActionItems: boolean;
-    /** Whether thread contains deadlines */
-    hasDeadlines: boolean;
-    /** Whether thread requires follow-up */
-    requiresFollowUp: boolean;
-    /** Intelligence metrics */
-    intelligence: {
-      /** Confidence score for priority (0-100) */
-      priorityConfidence: number;
-      /** Confidence score for action items (0-100) */
-      actionItemConfidence: number;
-      /** Confidence score for follow-up (0-100) */
-      followupConfidence: number;
-      /** Predicted response time (in hours) */
-      predictedResponseTime?: number;
-      /** Predicted resolution time (in hours) */
-      predictedResolutionTime?: number;
-      /** Risk score (0-100) */
-      riskScore?: number;
-      /** Importance score (0-100) */
-      importanceScore?: number;
-      /** Urgency score (0-100) */
-      urgencyScore?: number;
-      /** Relationship score (0-100) */
-      relationshipScore?: number;
-    };
+    hasDeadlineKeywords: boolean;
+    actionRequired: boolean;
+    stakeholders: {
+      name: string;
+      role: string;
+      isBlocking: boolean;
+    }[];
+    intelligenceSignals: string[];
   };
 }
