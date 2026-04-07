@@ -36,12 +36,16 @@ export function DifferentiationSection() {
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {differentiators.map((item) => (
-            <div key={item.title} className="glass rounded-[28px] p-6 text-center">
-              <div className="mb-4 text-[32px]">{item.icon}</div>
-              <h3 className="text-[20px] font-bold">{item.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-white/70">
-                {item.description}
-              </p>
+            <div key={item.title} className="glass rounded-[32px] p-8 hover:bg-white/[0.03] transition-all hover:transform hover:scale-[1.01]">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-1)] to-[var(--accent-2)] mb-6 text-2xl">
+                  {item.icon}
+                </div>
+                <h3 className="text-xl font-semibold tracking-tight">{item.title}</h3>
+                <p className="mt-3 text-[0.9375rem] leading-7 text-white/75 max-w-[280px]">
+                  {item.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

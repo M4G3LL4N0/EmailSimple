@@ -27,13 +27,11 @@ export function PageHero({
   secondaryCta
 }: PageHeroProps) {
   return (
-    <section className="relative overflow-hidden pt-[120px] pb-[100px]">
+    <section className="relative overflow-hidden pt-[140px] pb-[140px]">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 hero-grid opacity-[0.03]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[rgba(7,11,23,0.85)] to-[rgba(7,11,23,0.99)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--glow),_transparent_60%)] opacity-[0.4]" />
-        <div className="absolute top-0 left-0 w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,_var(--glow),_transparent_50%)] opacity-50 blur-[50px] pointer-events-none" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,_var(--glow-gold),_transparent_50%)] opacity-40 blur-[70px] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1F] to-[#070B17]" />
+        <div className="absolute top-0 left-1/3 w-[800px] h-[800px] rounded-full bg-[radial-gradient(ellipse_at_center,_rgba(99,102,241,0.12)_0%,_transparent_70%)] blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full bg-[radial-gradient(ellipse_at_center,_rgba(236,72,153,0.1)_0%,_transparent_70%)] blur-[80px] pointer-events-none" />
       </div>
       
       <div className="container relative z-10">
