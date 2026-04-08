@@ -30,7 +30,13 @@ export async function POST(
   
   try {
     const job = await syncService.startSync(params.id);
-    return NextResponse.json(job);
+    return NextResponse.json(job, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

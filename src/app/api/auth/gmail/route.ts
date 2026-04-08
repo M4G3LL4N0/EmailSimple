@@ -25,7 +25,9 @@ export async function GET() {
     'https://www.googleapis.com/auth/gmail.readonly',
     'https://www.googleapis.com/auth/gmail.modify',
     'https://www.googleapis.com/auth/gmail.metadata',
-    'https://www.googleapis.com/auth/gmail.settings.basic'
+    'https://www.googleapis.com/auth/gmail.settings.basic',
+    'https://www.googleapis.com/auth/gmail.labels',
+    'https://www.googleapis.com/auth/userinfo.email'
   ].join(' '));
   
   const state = JSON.stringify({

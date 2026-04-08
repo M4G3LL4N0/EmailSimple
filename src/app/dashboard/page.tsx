@@ -29,10 +29,10 @@ export default function DashboardPage() {
                 </h1>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                    {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                   </span>
                   <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80">
-                    v2.1.0
+                    {process.env.NEXT_PUBLIC_APP_VERSION || 'v2.1.0'}
                   </span>
                 </div>
               </div>

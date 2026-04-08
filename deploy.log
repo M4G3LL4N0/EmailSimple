@@ -1,0 +1,26 @@
+Retrieving project…
+Deploying noaerth/emailsimple
+Uploading [--------------------] (0.0B/3MB)
+Uploading [=====---------------] (767.6KB/3MB)
+Uploading [==========----------] (1.5MB/3MB)
+Uploading [===============-----] (2.2MB/3MB)
+Uploading [====================] (3.0MB/3MB)
+Inspect: https://vercel.com/noaerth/emailsimple/Hqo2b1ZXubADv7HWZ3798gpoYSgj [3s]
+Production: https://emailsimple-2i2mztv0h-noaerth.vercel.app [3s]
+https://emailsimple-2i2mztv0h-noaerth.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 104 deployment files...
+Building: Restored build cache from previous deployment (DhFsjKckcHGxv3AkCj4icDkWCsRD)
+Building: Running "vercel build"
+Building: Vercel CLI 50.38.2
+Building: Installing dependencies...
+Building: npm error code ETARGET
+Building: npm error notarget No matching version found for @supabase/ssr@^0.11.7.
+Building: npm error notarget In most cases you or one of your dependencies are requesting
+Building: npm error notarget a package version that doesn't exist.
+Building: npm error A complete log of this run can be found in: /vercel/.npm/_logs/2026-04-07T22_13_59_667Z-debug-0.log
+Building: Error: Command "npm install" exited with 1
+Error: Command "npm install" exited with 1
