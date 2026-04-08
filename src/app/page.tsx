@@ -15,7 +15,7 @@ export default function Page() {
     <PageShell>
       <PageHero
         title="Your inbox, simplified into what matters"
-        subtitle="EmailSimple turns overwhelming email into a clean daily brief with priorities, deadlines, replies, follow-ups, and calendar-ready actions"
+        subtitle="EmailSimple turns overwhelming email into a clean daily brief with priorities, deadlines, replies, follow-ups, calendar-ready actions, and intelligent scheduling"
         eyebrow="Inbox clarity, without inbox chaos"
         cta={{ text: "Join the Waitlist", href: "#waitlist" }}
         secondaryCta={{ text: "See the Product", href: "/dashboard" }}
