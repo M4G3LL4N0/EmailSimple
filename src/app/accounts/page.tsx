@@ -1,3 +1,5 @@
+"use client"
+
 // Accounts management page
 'use client';
 
