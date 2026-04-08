@@ -40,6 +40,8 @@ const deadlines: DeadlineCounts = {
   urgent: 2
 };
 
+import styles from './dashboard.module.css';
+
 interface DashboardPageProps {
   syncStatus?: SyncStatus;
 }
