@@ -2,7 +2,6 @@ import {
   PageShell,
   PageHero,
   ProblemSection,
-  DifferentiationSection,
   UseCasesSection,
   MarketOpportunity,
   FAQSection,
