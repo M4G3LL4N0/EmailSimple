@@ -4,10 +4,9 @@ import { DeadlineTimeline } from "@/components/dashboard/DeadlineTimeline";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from 'date-fns';
 import { Spinner } from "@/components/ui/spinner";
-import { ActionCenter } from "@/components/dashboard/ActionCenter";
 import { FollowUpRadar } from "@/components/dashboard/FollowUpRadar";
-import { AIReplyAssist } from "@/components/dashboard/AIReplyAssist";
 import { SmartScheduler } from "@/components/dashboard/SmartScheduler";
+import type { SyncStatus } from "@/lib/types/sync";
 
 // Mock data for build
 interface PriorityCounts {
@@ -372,11 +371,9 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <ActionCenter />
               <FollowUpRadar />
               <DeadlineTimeline />
               <SmartScheduler />
-              <AIReplyAssist />
             </div>
           </div>
         </div>
