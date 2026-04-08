@@ -1,14 +1,22 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import "tailwindcss/tailwind.css";
 import type { ProviderType } from "./types/account";
 import type { EmailParticipant } from "./types/email";
 import type { SyncState } from "./types/sync";
+
+export type { ClassValue, ProviderType, EmailParticipant, SyncState };
 
 /**
  * Merges class names using clsx and tailwind-merge
  * @param inputs - Class names or class name objects
  * @returns Merged class names string
+ */
+/**
+ * Combines and optimizes class names using clsx and tailwind-merge
+ * @param inputs - Class names or class name objects
+ * @returns Merged and optimized class names string
+ * @example
+ * cn('text-red-500', { 'bg-blue-500': true }) // 'text-red-500 bg-blue-500'
  */
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -48,8 +56,16 @@ export function createError(
  * @param email - The email address to validate
  * @returns True if the email is valid
  */
+/**
+ * Validates email address format using RFC 5322 regex
+ * @param email - The email address to validate
+ * @returns True if the email is valid
+ * @example
+ * isValidEmail('test@example.com') // true
+ * isValidEmail('invalid-email') // false
+ */
 export function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
 }
 
 /**
