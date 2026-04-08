@@ -231,10 +231,87 @@ export default function DashboardPage() {
             {/* Left Column - Intelligence Core */}
             <div className="lg:col-span-5 grid gap-8">
               <PriorityView />
+              
+              {/* New Email Health Section */}
+              <div className={cn(
+                "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
+                "border border-white/10 shadow-lg"
+              )}>
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] text-white/45">
+                      Email Health
+                    </p>
+                    <h2 className="mt-2 text-2xl font-bold tracking-tight">
+                      Inbox Performance
+                    </h2>
+                  </div>
+                  <button className="secondary-btn px-4 py-2 text-sm">
+                    View Details
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className={cn(
+                    "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-green-500/80",
+                    "border border-white/5"
+                  )}>
+                    <p className="text-sm text-white/75">Response Rate</p>
+                    <p className="mt-1 text-xl font-semibold">92%</p>
+                    <p className="mt-2 text-xs text-white/60">
+                      Within 24 hours
+                    </p>
+                  </div>
+                  <div className={cn(
+                    "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-amber-500/80",
+                    "border border-white/5"
+                  )}>
+                    <p className="text-sm text-white/75">Clutter Score</p>
+                    <p className="mt-1 text-xl font-semibold">18%</p>
+                    <p className="mt-2 text-xs text-white/60">
+                      Low-priority emails
+                    </p>
+                  </div>
+                  <div className={cn(
+                    "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-cyan-500/80",
+                    "border border-white/5"
+                  )}>
+                    <p className="text-sm text-white/75">Time Saved</p>
+                    <p className="mt-1 text-xl font-semibold">3.2 hrs</p>
+                    <p className="mt-2 text-xs text-white/60">
+                      This week
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Right Column - Action Tools */}
             <div className="lg:col-span-2 grid gap-8">
+              {/* New Quick Actions Panel */}
+              <div className={cn(
+                "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
+                "border border-white/10 shadow-lg"
+              )}>
+                <p className="text-xs uppercase tracking-[0.18em] text-white/45 mb-4">
+                  Quick Actions
+                </p>
+                <div className="space-y-3">
+                  <button className="secondary-btn w-full py-2 text-sm">
+                    Schedule Follow-ups
+                  </button>
+                  <button className="secondary-btn w-full py-2 text-sm">
+                    Create Meeting
+                  </button>
+                  <button className="secondary-btn w-full py-2 text-sm">
+                    Draft Replies
+                  </button>
+                  <button className="secondary-btn w-full py-2 text-sm">
+                    Review Priorities
+                  </button>
+                </div>
+              </div>
+
               <ActionCenter />
               <FollowUpRadar />
               <DeadlineTimeline />
