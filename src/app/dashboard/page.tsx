@@ -232,7 +232,7 @@ export default function DashboardPage() {
             <div className="lg:col-span-5 grid gap-8">
               <PriorityView />
               
-              {/* New Email Health Section */}
+              {/* Email Health Section */}
               <div className={cn(
                 "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
                 "border border-white/10 shadow-lg"
@@ -283,12 +283,30 @@ export default function DashboardPage() {
                     </p>
                   </div>
                 </div>
+                
+                {/* New Health Insights */}
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-[16px] bg-gradient-to-br from-green-500/10 to-green-800/5">
+                    <p className="text-sm text-white/75">Top Performer</p>
+                    <p className="mt-1 text-lg font-semibold">Client Responses</p>
+                    <p className="mt-2 text-xs text-white/60">
+                      98% response rate with 2.1h avg reply time
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-[16px] bg-gradient-to-br from-amber-500/10 to-amber-800/5">
+                    <p className="text-sm text-white/75">Improvement Area</p>
+                    <p className="mt-1 text-lg font-semibold">Internal Threads</p>
+                    <p className="mt-2 text-xs text-white/60">
+                      34% slower response rate than external
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Right Column - Action Tools */}
             <div className="lg:col-span-2 grid gap-8">
-              {/* New Quick Actions Panel */}
+              {/* Quick Actions Panel */}
               <div className={cn(
                 "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
                 "border border-white/10 shadow-lg"
@@ -297,17 +315,29 @@ export default function DashboardPage() {
                   Quick Actions
                 </p>
                 <div className="space-y-3">
-                  <button className="secondary-btn w-full py-2 text-sm">
-                    Schedule Follow-ups
+                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
+                    <span>📅</span>
+                    <span>Schedule Follow-ups</span>
                   </button>
-                  <button className="secondary-btn w-full py-2 text-sm">
-                    Create Meeting
+                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
+                    <span>📝</span>
+                    <span>Draft Replies</span>
                   </button>
-                  <button className="secondary-btn w-full py-2 text-sm">
-                    Draft Replies
+                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
+                    <span>⏰</span>
+                    <span>Set Reminders</span>
                   </button>
-                  <button className="secondary-btn w-full py-2 text-sm">
-                    Review Priorities
+                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
+                    <span>📊</span>
+                    <span>Analyze Trends</span>
+                  </button>
+                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
+                    <span>📂</span>
+                    <span>Organize Labels</span>
+                  </button>
+                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
+                    <span>📨</span>
+                    <span>Batch Process</span>
                   </button>
                 </div>
               </div>
