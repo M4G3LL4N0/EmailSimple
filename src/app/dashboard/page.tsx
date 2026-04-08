@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { FollowUpRadar } from "@/components/dashboard/FollowUpRadar";
 import { SmartScheduler } from "@/components/dashboard/SmartScheduler";
 import type { SyncStatus } from "@/lib/types/sync";
+import { Button } from "@/components/ui/button";
 
 // Mock data for build
 interface PriorityCounts {
@@ -39,7 +40,11 @@ const deadlines: DeadlineCounts = {
   urgent: 2
 };
 
-export default function DashboardPage() {
+interface DashboardPageProps {
+  syncStatus?: SyncStatus;
+}
+
+export default function DashboardPage({ syncStatus }: DashboardPageProps) {
   return (
     <PageShell>
       <div className="container py-10">
@@ -182,8 +187,8 @@ export default function DashboardPage() {
           </div>
           
           <div className="mt-6 flex gap-3">
-            <button className="primary-btn">Take the Tour</button>
-            <button className="secondary-btn">Watch Demo</button>
+            <Button variant="primary">Take the Tour</Button>
+            <Button variant="secondary">Watch Demo</Button>
           </div>
         </div>
 
@@ -209,7 +214,7 @@ export default function DashboardPage() {
                 )}>
                   <span className="text-white/75">Last sync:</span> 2 min ago
                 </div>
-                <button className="secondary-btn px-4 py-2 text-sm">
+                <Button variant="secondary" className="px-4 py-2 text-sm">
                   Sync Now
                 </button>
               </div>
