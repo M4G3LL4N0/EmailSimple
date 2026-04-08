@@ -25,6 +25,11 @@ export default async function RootLayout({
   const supabase = createClient();
   
   const { data: { session } } = await supabase.auth.getSession();
+  const { data: syncStatus } = await supabase
+    .from('sync_status')
+    .select('*')
+    .eq('account_id', session?.user.id)
+    .single();
 
   return (
     <html lang="en" className={inter.variable}>

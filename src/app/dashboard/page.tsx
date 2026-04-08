@@ -2,6 +2,8 @@ import { PageShell } from "@/components/PageShell";
 import { PriorityView } from "@/components/dashboard/PriorityView";
 import { DeadlineTimeline } from "@/components/dashboard/DeadlineTimeline";
 import { cn } from "@/lib/utils";
+import { formatDistanceToNow } from 'date-fns';
+import { Spinner } from "@/components/ui/spinner";
 import { ActionCenter } from "@/components/dashboard/ActionCenter";
 import { FollowUpRadar } from "@/components/dashboard/FollowUpRadar";
 import { AIReplyAssist } from "@/components/dashboard/AIReplyAssist";
@@ -111,14 +113,36 @@ export default function DashboardPage() {
             <div className="flex flex-col gap-3 min-w-[200px]">
               <div className={cn(
                 "backdrop-blur-sm bg-white/[0.03] rounded-lg p-3 text-center",
-                "border border-white/5"
+                "border border-white/5",
+                syncStatus?.status === 'syncing' ? 'animate-pulse' : ''
               )}>
                 <p className="text-xs text-white/60">Last sync</p>
-                <p className="text-sm font-medium mt-1">2 min ago</p>
+                <p className="text-sm font-medium mt-1">
+                  {syncStatus?.last_sync_at ? 
+                    formatDistanceToNow(new Date(syncStatus.last_sync_at), { addSuffix: true }) : 
+                    'Never'}
+                </p>
+                {syncStatus?.status === 'syncing' && (
+                  <p className="text-xs text-blue-400 mt-1">Syncing now...</p>
+                )}
               </div>
-              <button className="secondary-btn w-full py-2 text-sm">
-                Sync Now
-              </button>
+              <form action="/api/sync" method="POST">
+                <button 
+                  type="submit"
+                  className={cn(
+                    "secondary-btn w-full py-2 text-sm",
+                    syncStatus?.status === 'syncing' ? 'opacity-70 cursor-not-allowed' : ''
+                  )}
+                  disabled={syncStatus?.status === 'syncing'}
+                >
+                  {syncStatus?.status === 'syncing' ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Spinner size="sm" />
+                      Syncing...
+                    </span>
+                  ) : 'Sync Now'}
+                </button>
+              </form>
               <button className="secondary-btn w-full py-2 text-sm">
                 View Full Inbox
               </button>
@@ -230,7 +254,13 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-7">
             {/* Left Column - Intelligence Core */}
             <div className="lg:col-span-5 grid gap-8">
-              <PriorityView />
+              <PriorityView 
+                criticalCount={priorities.critical}
+                highCount={priorities.high}
+                mediumCount={priorities.medium}
+                lowCount={priorities.low}
+                lastUpdated={syncStatus?.last_sync_at}
+              />
               
               {/* Email Health Section */}
               <div className={cn(
