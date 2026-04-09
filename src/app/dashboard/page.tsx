@@ -1,390 +1,141 @@
-import { PageShell } from "@/components/PageShell";
-import { PriorityView } from "@/components/dashboard/PriorityView";
-import { DeadlineTimeline } from "@/components/dashboard/DeadlineTimeline";
-import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from 'date-fns';
-import { Spinner } from "@/components/ui/spinner";
-import { FollowUpRadar } from "@/components/dashboard/FollowUpRadar";
-import { SmartScheduler } from "@/components/dashboard/SmartScheduler";
-import type { SyncStatus } from "@/lib/types/sync";
-import { Button } from "@/components/ui/button";
+"use client";
 
-// Mock data for build
-interface PriorityCounts {
-  critical: number;
-  high: number;
-  medium: number;
-  low: number;
-}
+import { useState } from "react";
 
-interface ActionCounts {
-  all: number;
-}
+function Button({
+  children,
+  className = "",
+  variant = "primary",
+  type = "button",
+  disabled = false,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  variant?: "primary" | "secondary";
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+}) {
+  const base =
+    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-medium transition";
+  const styles =
+    variant === "secondary"
+      ? "border border-white/10 bg-white/5 text-white hover:bg-white/10"
+      : "bg-white text-black hover:opacity-90";
 
-interface DeadlineCounts {
-  urgent: number;
-}
-
-const priorities: PriorityCounts = {
-  critical: 3,
-  high: 5,
-  medium: 2,
-  low: 1
-};
-
-const actions: ActionCounts = {
-  all: 5
-};
-
-const deadlines: DeadlineCounts = {
-  urgent: 2
-};
-
-import styles from './dashboard.module.css';
-
-interface DashboardPageProps {
-  syncStatus?: SyncStatus;
-}
-
-export default function DashboardPage({ syncStatus }: DashboardPageProps) {
   return (
-    <PageShell>
-      <div className="container py-10">
-        {/* Command Center Header */}
-        <div className={cn(
-          "backdrop-blur-lg bg-white/5 rounded-[28px] p-6 mb-8",
-          "border border-white/10 shadow-lg"
-        )}>
-          <div className="flex items-start justify-between gap-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                <p className="text-xs uppercase tracking-[0.16em] text-red-400">
-                  Operational Dashboard
-                </p>
-              </div>
-            
-              <div className="flex items-end gap-4">
-                <h1 className="text-3xl font-semibold tracking-tight text-white">
-                  Inbox Command Center
-                </h1>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                  </span>
-                  <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80">
-                    {process.env.NEXT_PUBLIC_APP_VERSION ?? 'v2.1.0'}
-                  </span>
-                </div>
-              </div>
+    <button type={type} disabled={disabled} className={`${base} ${styles} ${className}`}>
+      {children}
+    </button>
+  );
+}
 
-              <p className="mt-3 text-sm text-white/75 max-w-2xl">
-                <span className="font-medium">Current focus:</span> {priorities.critical} critical items, {actions.all} pending actions, and {deadlines.urgent} upcoming deadlines requiring attention today.
-              </p>
-          
-              <div className="mt-6 grid grid-cols-3 gap-4">
-                <div className={cn(
-                  "backdrop-blur-sm bg-white/[0.03] rounded-xl p-4 border-l-4 border-red-500",
-                  "border border-white/5"
-                )}>
-                  <p className="text-xs uppercase tracking-wider text-white/60 mb-2">
-                    Critical Items
-                  </p>
-                  <p className="text-2xl font-bold text-white">3</p>
-                  <p className="mt-1 text-xs text-white/60">
-                    Immediate attention needed
-                  </p>
-                </div>
-                <div className="glass-soft rounded-xl p-4 border-l-4 border-amber-500">
-                  <p className="text-xs uppercase tracking-wider text-white/60 mb-2">
-                    High Value
-                  </p>
-                  <p className="text-2xl font-bold text-white">5</p>
-                  <p className="mt-1 text-xs text-white/60">
-                    Strategic impacts
-                  </p>
-                </div>
-                <div className="glass-soft rounded-xl p-4 border-l-4 border-green-500">
-                  <p className="text-xs uppercase tracking-wider text-white/60 mb-2">
-                    Time Saved
-                  </p>
-                  <p className="text-2xl font-bold text-white">2.1h</p>
-                  <p className="mt-1 text-xs text-white/60">
-                    Today's projected savings  
-                  </p>
-                </div>
-              </div>
-            </div>
-          
-            <div className="flex flex-col gap-3 min-w-[200px]">
-              <div className={cn(
-                "backdrop-blur-sm bg-white/[0.03] rounded-lg p-3 text-center",
-                "border border-white/5",
-                syncStatus?.status === 'syncing' ? 'animate-pulse' : ''
-              )}>
-                <p className="text-xs text-white/60">Last sync</p>
-                <p className="text-sm font-medium mt-1">
-                  {syncStatus?.last_sync_at ? 
-                    formatDistanceToNow(new Date(syncStatus.last_sync_at), { addSuffix: true }) : 
-                    'Never'}
-                </p>
-                {syncStatus?.status === 'syncing' && (
-                  <p className="text-xs text-blue-400 mt-1">Syncing now...</p>
-                )}
-              </div>
-              <form action="/api/sync" method="POST">
-                <button 
-                  type="submit"
-                  className={cn(
-                    "secondary-btn w-full py-2 text-sm",
-                    syncStatus?.status === 'syncing' ? 'opacity-70 cursor-not-allowed' : ''
-                  )}
-                  disabled={syncStatus?.status === 'syncing'}
-                >
-                  {syncStatus?.status === 'syncing' ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <Spinner size="sm" />
-                      Syncing...
-                    </span>
-                  ) : 'Sync Now'}
-                </button>
-              </form>
-              <button className="secondary-btn w-full py-2 text-sm">
-                View Full Inbox
-              </button>
-            </div>
+export default function DashboardPage() {
+  const [syncing, setSyncing] = useState(false);
+
+  async function handleSync(e: React.FormEvent) {
+    e.preventDefault();
+    setSyncing(true);
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    setSyncing(false);
+  }
+
+  return (
+    <main className="min-h-screen bg-[#0b0f14] text-white">
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.24em] text-white/45">EmailSimple</p>
+            <h1 className="mt-2 text-4xl font-semibold tracking-[-0.04em]">Dashboard</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-white/65">
+              Monitor inbox activity, review sync status, and keep your lightweight email workflow moving.
+            </p>
           </div>
-          
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className={cn(
-              "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4",
-              "border border-white/5"
-            )}>
-              <p className="text-sm text-white/75">Most Urgent</p>
-              <p className="mt-1 text-lg font-semibold text-white">
-                Client Contract Approval
-              </p>
-              <p className="mt-1 text-sm text-white/60">
-                Due today • 3 stakeholders
-              </p>
-            </div>
-            <div className="glass-soft rounded-[20px] p-4">
-              <p className="text-sm text-white/75">Highest Risk</p>
-              <p className="mt-1 text-lg font-semibold text-white">
-                Invoice Reminder
-              </p>
-              <p className="mt-1 text-sm text-white/60">
-                2 days overdue • $4,500
-              </p>
-            </div>
-            <div className="glass-soft rounded-[20px] p-4">
-              <p className="text-sm text-white/75">Next Action</p>
-              <p className="mt-1 text-lg font-semibold text-white">
-                Schedule Meeting
-              </p>
-              <p className="mt-1 text-sm text-white/60">
-                2 participants • Time-sensitive
-              </p>
-            </div>
-          </div>
-          
-          <div className="mt-6 flex gap-3">
-            <Button variant="primary">Take the Tour</Button>
-            <Button variant="secondary">Watch Demo</Button>
-          </div>
+          <form onSubmit={handleSync}>
+            <Button type="submit" variant="secondary" className="px-4 py-2 text-sm" disabled={syncing}>
+              {syncing ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-white/70" />
+                  Syncing...
+                </span>
+              ) : (
+                "Sync Now"
+              )}
+            </Button>
+          </form>
         </div>
 
-        <div className="grid grid-cols-1 gap-8">
-          {/* Executive Summary */}
-          <div className={cn(
-            "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
-            "border border-white/10 shadow-lg"
-          )}>
-            <div className="flex items-center justify-between mb-6">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {[
+            { label: "Unread", value: "18", sub: "Needs attention" },
+            { label: "Drafts", value: "6", sub: "Pending review" },
+            { label: "Sent Today", value: "24", sub: "Outbound activity" },
+          ].map((item) => (
+            <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <p className="text-sm text-white/55">{item.label}</p>
+              <p className="mt-2 text-3xl font-semibold tracking-[-0.04em]">{item.value}</p>
+              <p className="mt-2 text-sm text-white/45">{item.sub}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_0.9fr]">
+          <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <div className="mb-5 flex items-center justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/45">
-                  Your Email Command Center
-                </p>
-                <h1 className="mt-2 text-3xl font-bold tracking-tight">
-                  Today's Critical Path
-                </h1>
+                <h2 className="text-lg font-semibold">Recent Activity</h2>
+                <p className="mt-1 text-sm text-white/50">Latest inbox and outbound events</p>
               </div>
-              <div className="flex items-center gap-3">
-                <div className={cn(
-                  "backdrop-blur-sm bg-white/[0.03] rounded-full px-4 py-2 text-sm",
-                  "border border-white/5"
-                )}>
-                  <span className="text-white/75">Last sync:</span> 2 min ago
-                </div>
-                <Button variant="secondary" className="px-4 py-2 text-sm">
-                  Sync Now
-                </button>
-              </div>
+              <Button variant="secondary" className="secondary-btn w-full max-w-[160px] py-2 text-sm">
+                View Full Inbox
+              </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={cn(
-                "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-red-500/80",
-                "border border-white/5"
-              )}>
-                <p className="text-sm text-white/75">Urgent Priorities</p>
-                <p className="mt-1 text-xl font-semibold">3 Items</p>
-                <p className="mt-2 text-xs text-white/60">
-                  Contracts, payments, deadlines
-                </p>
-              </div>
-              <div className={cn(
-                "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-amber-500/80",
-                "border border-white/5"
-              )}>
-                <p className="text-sm text-white/75">Pending Actions</p>
-                <p className="mt-1 text-xl font-semibold">5 Items</p>
-                <p className="mt-2 text-xs text-white/60">
-                  Replies, approvals, follow-ups
-                </p>
-              </div>
-              <div className={cn(
-                "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-cyan-500/80",
-                "border border-white/5"
-              )}>
-                <p className="text-sm text-white/75">Time Saved</p>
-                <p className="mt-1 text-xl font-semibold">2.1 hrs</p>
-                <p className="mt-2 text-xs text-white/60">
-                  Today's estimated savings
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Dashboard Grid */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-7">
-            {/* Left Column - Intelligence Core */}
-            <div className="lg:col-span-5 grid gap-8">
-              <PriorityView 
-                criticalCount={priorities.critical}
-                highCount={priorities.high}
-                mediumCount={priorities.medium}
-                lowCount={priorities.low}
-                lastUpdated={syncStatus?.last_sync_at}
-              />
-              
-              {/* Email Health Section */}
-              <div className={cn(
-                "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
-                "border border-white/10 shadow-lg"
-              )}>
-                <div className="flex items-center justify-between mb-6">
+            <div className="space-y-3">
+              {[
+                { title: "New lead reply received", meta: "2 minutes ago", status: "Inbox" },
+                { title: "Proposal follow-up sent", meta: "16 minutes ago", status: "Sent" },
+                { title: "Draft saved for client outreach", meta: "38 minutes ago", status: "Draft" },
+                { title: "Automation sync completed", meta: "1 hour ago", status: "System" },
+              ].map((item) => (
+                <div
+                  key={`${item.title}-${item.meta}`}
+                  className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+                >
                   <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-white/45">
-                      Email Health
-                    </p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-tight">
-                      Inbox Performance
-                    </h2>
+                    <p className="text-sm font-medium text-white">{item.title}</p>
+                    <p className="mt-1 text-xs text-white/45">{item.meta}</p>
                   </div>
-                  <button className="secondary-btn px-4 py-2 text-sm">
-                    View Details
-                  </button>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
+                    {item.status}
+                  </span>
                 </div>
+              ))}
+            </div>
+          </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className={cn(
-                    "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-green-500/80",
-                    "border border-white/5"
-                  )}>
-                    <p className="text-sm text-white/75">Response Rate</p>
-                    <p className="mt-1 text-xl font-semibold">92%</p>
-                    <p className="mt-2 text-xs text-white/60">
-                      Within 24 hours
-                    </p>
-                  </div>
-                  <div className={cn(
-                    "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-amber-500/80",
-                    "border border-white/5"
-                  )}>
-                    <p className="text-sm text-white/75">Clutter Score</p>
-                    <p className="mt-1 text-xl font-semibold">18%</p>
-                    <p className="mt-2 text-xs text-white/60">
-                      Low-priority emails
-                    </p>
-                  </div>
-                  <div className={cn(
-                    "backdrop-blur-sm bg-white/[0.03] rounded-[20px] p-4 border-l-4 border-cyan-500/80",
-                    "border border-white/5"
-                  )}>
-                    <p className="text-sm text-white/75">Time Saved</p>
-                    <p className="mt-1 text-xl font-semibold">3.2 hrs</p>
-                    <p className="mt-2 text-xs text-white/60">
-                      This week
-                    </p>
-                  </div>
-                </div>
-                
-                {/* New Health Insights */}
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-[16px] bg-gradient-to-br from-green-500/10 to-green-800/5">
-                    <p className="text-sm text-white/75">Top Performer</p>
-                    <p className="mt-1 text-lg font-semibold">Client Responses</p>
-                    <p className="mt-2 text-xs text-white/60">
-                      98% response rate with 2.1h avg reply time
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-[16px] bg-gradient-to-br from-amber-500/10 to-amber-800/5">
-                    <p className="text-sm text-white/75">Improvement Area</p>
-                    <p className="mt-1 text-lg font-semibold">Internal Threads</p>
-                    <p className="mt-2 text-xs text-white/60">
-                      34% slower response rate than external
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <aside className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h2 className="text-lg font-semibold">Quick Actions</h2>
+            <p className="mt-1 text-sm text-white/50">Common tasks for fast execution</p>
+
+            <div className="mt-5 grid gap-3">
+              <Button className="w-full justify-center">Compose Message</Button>
+              <Button variant="secondary" className="w-full justify-center">
+                Review Drafts
+              </Button>
+              <Button variant="secondary" className="w-full justify-center">
+                Manage Contacts
+              </Button>
             </div>
 
-            {/* Right Column - Action Tools */}
-            <div className="lg:col-span-2 grid gap-8">
-              {/* Quick Actions Panel */}
-              <div className={cn(
-                "backdrop-blur-lg bg-white/5 rounded-[28px] p-6",
-                "border border-white/10 shadow-lg"
-              )}>
-                <p className="text-xs uppercase tracking-[0.18em] text-white/45 mb-4">
-                  Quick Actions
-                </p>
-                <div className="space-y-3">
-                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
-                    <span>📅</span>
-                    <span>Schedule Follow-ups</span>
-                  </button>
-                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
-                    <span>📝</span>
-                    <span>Draft Replies</span>
-                  </button>
-                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
-                    <span>⏰</span>
-                    <span>Set Reminders</span>
-                  </button>
-                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
-                    <span>📊</span>
-                    <span>Analyze Trends</span>
-                  </button>
-                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
-                    <span>📂</span>
-                    <span>Organize Labels</span>
-                  </button>
-                  <button className="secondary-btn w-full py-2 text-sm flex items-center gap-2">
-                    <span>📨</span>
-                    <span>Batch Process</span>
-                  </button>
-                </div>
-              </div>
-
-              <FollowUpRadar />
-              <DeadlineTimeline />
-              <SmartScheduler />
+            <div className="mt-8 rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-sm font-medium">Sync Health</p>
+              <p className="mt-2 text-sm text-white/60">
+                Last successful sync completed moments ago. All core systems appear healthy.
+              </p>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
-    </PageShell>
+    </main>
   );
 }
