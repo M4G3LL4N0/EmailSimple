@@ -22,7 +22,7 @@ export default function DashboardPage() {
         <p className="text-xs uppercase tracking-[0.18em] text-white/45">Illustrative preview</p>
         <h1 className="mt-2 text-4xl font-semibold tracking-[-0.04em]">The morning brief</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-white/65">
-          EmailSimple opens on what needs attention. These three items show the shape of a calm morning. They are not a live mailbox and they are not inbox totals.
+          A calmer morning starts with the approval, the invoice, and the conversation about to go quiet.
         </p>
         <ol className="mt-8 grid gap-4">
           {brief.map((item, index) => (
